@@ -1,0 +1,24 @@
+<svg width="500" height="500" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <defs>
+  <linearGradient id="svg_10" x1="1" y1="1" x2="1" y2="0">
+   <stop stop-color="#394053" offset="0"/>
+   <stop stop-color="#FFADA0" offset="1"/>
+  </linearGradient>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="502" height="502" id="canvas_background" fill="#fff"/>
+  <g id="canvasGrid" display="none">
+   <rect id="svg_1" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <rect stroke="#ffffff" rx="50" id="svg_13" height="450" width="450" y="25" x="25" fill-opacity="null" stroke-opacity="null" stroke-width="5" fill="url(#svg_10)"/>
+  <ellipse fill="#fff" stroke="#000" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" cx="535" cy="500" id="svg_6" rx="1" ry="0.5"/>
+  <path stroke="#000" fill="#fff" stroke-width="0" d="m253.749963,76.749983c-113.219012,0 -204.999941,72.53237 -204.999941,162.002784c0,30.574632 10.850417,59.137224 29.520985,83.52647l-29.520985,68.195137l82.189897,-22.235384c34.249481,20.322041 76.684938,32.511004 122.810044,32.511004c113.21914,0 205.000005,-72.532452 205.000005,-161.997247c0,-89.470394 -91.780865,-162.002763 -205.000005,-162.002763l0,0z" id="svg_2"/>
+  <text stroke="#fae1df" transform="matrix(5.9912517004970685,0,0,7.038749099539444,-1185.7161814470478,-1521.6982642273802) " font-weight="bold" xml:space="preserve" text-anchor="start" font-family="'Trebuchet MS', Gadget, sans-serif" font-size="24" id="svg_9" y="257.01101" x="209.25737" stroke-width="0" fill="#394053">chitt</text>
+  <text stroke="#fae1df" transform="matrix(4.562033009101132,0,0,3.2278805420024814,-900.8379316338668,-562.4686489634614) " font-weight="bold" xml:space="preserve" text-anchor="start" font-family="'Trebuchet MS', Gadget, sans-serif" font-size="24" id="svg_11" y="241.194114" x="280.534468" stroke-width="0" fill="#394053">r</text>
+ </g>
+</svg>
