@@ -1,37 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View, FlatList, StyleSheet, Text } from 'react-native';
-
-const CHITS = [
-    {
-        "timestamp": 0,
-        "chit_content": "I have this opinion I want to share",
-        "location": {
-            "longitude": 0,
-            "latitude": 0
-        },
-        "user": {
-            "user_id": 15,
-            "given_name": "Internet",
-            "family_name": "Person",
-            "email": "internetperson1@email.com"
-        }
-    },
-    {
-        "timestamp": 0,
-        "chit_content": "I hate seeing people's dumb opinions",
-        "location": {
-            "longitude": 0,
-            "latitude": 0
-        },
-        "user": {
-            "user_id": 12,
-            "given_name": "Another",
-            "family_name": "Person",
-            "email": "anotherinternetperson@email.com"
-        }
-    },
-];
-
+import { Image, View, FlatList, StyleSheet, Text, ActivityIndicator } from 'react-native';
 
 function Chit({ chit }) {
     return (
@@ -57,8 +25,8 @@ const styles = StyleSheet.create({
     chit_photo: {
         width: 60, height: 60
     },
-    chit_content: { 
-        flexDirection: "column" 
+    chit_content: {
+        flexDirection: "column"
     },
     user: {
         fontSize: 26,
@@ -67,13 +35,50 @@ const styles = StyleSheet.create({
 
 class FeedScreen extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: true,
+            chitData: []
+        }
+    }
+
+    getData() {
+        return fetch('http://10.0.2.2:3333/api/v0.0.5/chits')
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log(responseJson);
+                this.setState({
+                    isLoading: false,
+                    chitData: responseJson,
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+
     render() {
+        if (this.state.isLoading) {
+            return (
+                <View>
+                    <ActivityIndicator />
+                </View>
+            )
+        }
+
         return (
             <View>
                 <FlatList
-                    data={CHITS}
+                    data={this.state.chitData}
                     renderItem={({ item }) => <Chit chit={item} />}
-                    keyExtractor={item => item.user.user_id + item.timestamp}
+                    keyExtractor={item => item.chit_id}
+
                 />
             </View>
         );

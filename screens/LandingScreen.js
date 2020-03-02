@@ -15,7 +15,7 @@ class LandingScreen extends Component {
                 flexDirection: 'column',
                 justifyContent: 'space-around',
                 alignItems: 'center',
-                
+
             }}>
                 <Image
                     style={{
@@ -46,7 +46,7 @@ class LandingScreen extends Component {
 
                 <View
                     style={{
-                        alignSelf:'stretch',
+                        alignSelf: 'stretch',
                         borderBottomColor: 'black',
                         borderBottomWidth: 0.5,
                     }}
@@ -57,6 +57,11 @@ class LandingScreen extends Component {
                 <Button
                     title="Register"
                     onPress={() => this.props.navigation.navigate('Registration')}
+                />
+
+                <Button
+                    title="No thanks!"
+                    onPress={() => this.props.navigation.navigate('Feed')}
                 />
 
             </View>
