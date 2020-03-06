@@ -1,171 +1,153 @@
-import React, { Component } from 'react';
-import { Text, View, ScrollView, FlatList, StyleSheet, Image, Button } from 'react-native';
+import React, {Component} from 'react';
+import {NavigationEvents} from 'react-navigation';
 
-const CHITS = [
-    {
-        "timestamp": 0,
-        "chit_content": "This is my most recent chit",
-        "location": {
-            "longitude": 0,
-            "latitude": 0
-        },
-        "user": {
-            "user_id": 8,
-            "given_name": "Emily",
-            "family_name": "Rogers",
-            "email": "sampleemail@email.com"
-        }
-    },
-    {
-        "timestamp": 0,
-        "chit_content": "This is an older chit",
-        "location": {
-            "longitude": 0,
-            "latitude": 0
-        },
-        "user": {
-            "user_id": 8,
-            "given_name": "Emily",
-            "family_name": "Rogers",
-            "email": "sampleemail@email.com"
-        }
-    },
+import {
+  Text,
+  View,
+  ScrollView,
+  FlatList,
+  StyleSheet,
+  Image,
+  Button,
+  ActivityIndicator,
+  TouchableHighlight,
+} from 'react-native';
 
-    {
-        "timestamp": 0,
-        "chit_content": "This is another chit",
-        "location": {
-            "longitude": 0,
-            "latitude": 0
-        },
-        "user": {
-            "user_id": 8,
-            "given_name": "Emily",
-            "family_name": "Rogers",
-            "email": "sampleemail@email.com"
-        }
-    },
-
-    {
-        "timestamp": 0,
-        "chit_content": "This is yet another chit",
-        "location": {
-            "longitude": 0,
-            "latitude": 0
-        },
-        "user": {
-            "user_id": 8,
-            "given_name": "Emily",
-            "family_name": "Rogers",
-            "email": "sampleemail@email.com"
-        }
-    },
-    {
-        "timestamp": 0,
-        "chit_content": "This is anooother chit",
-        "location": {
-            "longitude": 0,
-            "latitude": 0
-        },
-        "user": {
-            "user_id": 8,
-            "given_name": "Emily",
-            "family_name": "Rogers",
-            "email": "sampleemail@email.com"
-        }
-    },
-];
+import {Chit} from '../components/chit';
+import {getUserDetails, logout} from '../services/UserManagement';
 
 const styles = StyleSheet.create({
-    chit_container: {
-
-    },
-    chit: {
-        backgroundColor: '#fff1f0',
-        marginVertical: 5,
-        flexDirection: "row"
-    },
-    chit_photo: {
-        width: 60, height: 60
-    },
-    chit_content: {
-        flexDirection: "column"
-    },
-    user: {
-        fontSize: 26,
-    },
+  user: {
+    fontSize: 26,
+  },
 });
 
-
-function Chit({ chit }) {
-    return (
-        <View style={styles.chit}>
-            <Image
-                style={styles.chit_photo}
-                source={require('./../assets/personDefault.png')}
-            />
-            <View style={styles.chit_content}>
-                <Text style={styles.user}> {chit.user.given_name} {chit.user.family_name}</Text>
-                <Text> {chit.chit_content}</Text>
-            </View>
-        </View>
-    );
-}
-
-
 class AccountScreen extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { email: 'sampleemail@email.com', password: 'secret', firstName: "Emily", surname: "Rogers" };
-    }
+  constructor(props) {
+    super(props);
 
-    render() {
-        return (
-            <View style={{
-                flex: 1,
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                marginVertical: 5
-            }}>
-                <View>
-                    <Image
-                        style={{ width: 200, height: 200, borderRadius: 200 / 2 }}
-                        source={require('./../assets/personDefault.png')}
-                    />
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={{ flexDirection: "column" }}>
-                        <Text style={styles.user}>{this.state.firstName} {this.state.surname}</Text>
-                        <Text>{this.state.email}</Text>
-                    </View>
-                    <Image
-                        style={{ width: 50, height: 50, alignSelf: "flex-end" }}
-                        source={require('./../assets/EditPencil.png')}
-                    />
-                </View>
-                <View style= {{flexDirection:"row", alignItems:"center", marginHorizontal:10}}>
-                    <Button
-                        title="Followers"
-                        onPress={() => this.props.navigation.navigate('FollowList')}
-                    />
-                    <Button
-                        title="Following"
-                        onPress={() => this.props.navigation.navigate('FollowList')}
-                    />
-                </View>
-                <ScrollView style={{
-                    alignSelf: 'stretch',
-                    flexGrow: 0
-                }}>
-                    <FlatList
-                        data={CHITS}
-                        renderItem={({ item }) => <Chit chit={item} />}
-                        keyExtractor={item => item.user.user_id + item.timestamp}
-                    />
-                </ScrollView>
-            </View >
-        );
+    var token =
+      this.props.navigation.state.params.authToken != null
+        ? this.props.navigation.state.params.authToken
+        : '';
+    var id =
+      this.props.navigation.state.params.userId != null
+        ? this.props.navigation.state.params.userId
+        : '';
+
+    this.state = {
+      isLoading: true,
+      userData: '',
+      authToken: token,
+      userId: id,
+    };
+  }
+
+  componentDidMount() {
+    this.getUserData();
+  }
+  onFocus() {    
+    this.getUserData();
+  }
+
+  async getUserData() {
+    var responseJson = await getUserDetails(this.state.userId);
+    this.setState({
+      isLoading: false,
+      userData: responseJson,
+    });
+  }
+
+  async logout() {
+    var status = await logout(this.state.authToken);
+    this.props.navigation.navigate('Landing');
+  }
+
+  render() {
+    if (this.state.isLoading) {
+      return (
+        <View>
+          <ActivityIndicator />
+        </View>
+      );
     }
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          marginVertical: 5,
+        }}>
+        <NavigationEvents onWillFocus={() => this.onFocus()} />
+        <View>
+          <Image
+            style={{width: 200, height: 200, borderRadius: 200 / 2}}
+            source={require('./../assets/personDefault.png')}
+          />
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'column'}}>
+            <Text style={styles.user}>
+              {this.state.userData.given_name} {this.state.userData.family_name}
+            </Text>
+            <Text>{this.state.userData.email}</Text>
+          </View>
+          <TouchableHighlight
+            onPress={() =>
+              this.props.navigation.navigate('UpdateAccount', {
+                authToken: this.state.authToken,
+                userId: this.state.userId,
+              })
+            }>
+            <Image
+              style={{width: 50, height: 50, alignSelf: 'flex-end'}}
+              source={require('./../assets/EditPencil.png')}
+            />
+          </TouchableHighlight>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginHorizontal: 10,
+          }}>
+          <Button
+            title="Followers"
+            onPress={() => this.props.navigation.navigate('FollowList')}
+          />
+          <Button
+            title="Following"
+            onPress={() => this.props.navigation.navigate('FollowList')}
+          />
+           <Button
+            title="Feed"
+            onPress={() =>  this.props.navigation.navigate('Feed', {
+                authToken: this.state.authToken,
+                userId: this.state.userId,
+              })}
+          />
+          <Button title="Logout" onPress={() => this.logout()} />
+        </View>
+        <ScrollView
+          style={{
+            alignSelf: 'stretch',
+            flexGrow: 0,
+          }}>
+          <FlatList
+            data={this.state.userData.recent_chits}
+            renderItem={({item}) => (
+              <Chit
+                chit_content={item.chit_content}
+                user={this.state.userData}
+              />
+            )}
+            keyExtractor={item => item.chit_id}
+          />
+        </ScrollView>
+      </View>
+    );
+  }
 }
 export default AccountScreen;

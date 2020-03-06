@@ -6,6 +6,7 @@ import LandingScreen from './screens/LandingScreen';
 import FeedScreen from './screens/FeedScreen';
 import AccountScreen from './screens/AccountScreen';
 import FollowListScreen from './screens/FollowListScreen';
+import UpdateAccountScreen from './screens/UpdateAccount';
 
 const AppStackNav = createStackNavigator({
   // Home: {
@@ -22,6 +23,9 @@ const AppStackNav = createStackNavigator({
   },
   Account:{
     screen: AccountScreen
+  },
+  UpdateAccount:{
+    screen: UpdateAccountScreen
   },
   FollowList:{
     screen:FollowListScreen
