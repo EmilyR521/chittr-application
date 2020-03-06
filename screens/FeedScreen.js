@@ -12,6 +12,8 @@ import {
 import {Chit} from '../components/chit';
 import CreateChit from '../components/createChit';
 import {getChits} from '../services/PostingChits';
+import {getUserDetails} from '../services/UserManagement';
+import {postChit} from '../services/PostingChits';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,70 +44,55 @@ class FeedScreen extends Component {
       chitData: [],
       authToken: token,
       userId: id,
-      userData:null
+      userData: null,
     };
   }
 
-  onFocus() {
+  componentDidMount() {
+    this.getChitData();
     if (this.state.userId != '') {
       this.getUserData();
     }
   }
 
-  async getUserData() {
-    var responseJson = await getUserDetails(this.state.userId);
-    this.setState({
-      isLoading: false,
-      userData: responseJson,
-    });
-  }
-
-  componentDidMount() {
-    this.getChitData();
-  }
-
   onFocus() {
     this.getChitData();
+    if (this.state.userId != '') {
+      this.getUserData();
+    }
   }
 
   onChangeTextHandler = e => {
     this.setState({
       inputText: e,
     });
-    console.log('change: ' + e);
+  };
+  async getChitData() {
+    var responseJson = await getChits();
+    this.setState({
+      isLoading: false,
+      chitData: responseJson,
+    });
+  }
+
+  getUserData = async () => {
+    console.log('state: ' + this.state);
+    var responseJson = await getUserDetails(this.state.userId);
+    this.setState({
+      isLoading: false,
+      userData: responseJson,
+    });
+
+    console.log('userData: ' + this.state.userData);
   };
 
-  onSubmit = () => {
+  onSubmit = async () => {
     if (this.state.userData == null) {
-      Alert.alert(
-        'Sorry!',
-        'You need to log in to share chits.',
-        [
-          {
-            text: 'Log in',
-            onPress: () => this.props.navigation.navigate('Landing'),
-          },
-          {
-            text: 'Sign up',
-            onPress: () => this.props.navigation.navigate('Registration'),
-          },
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-        ],
-        {cancelable: true},
-      );
+      this.alertLoginNeeded;
     } else {
       var body = JSON.stringify({
-        chit_id:
-          Math.random()
-            .toString(36)
-            .substring(2, 15) +
-          Math.random()
-            .toString(36)
-            .substring(2, 15),
-        timestamp: Date.now().toString(),
+        chit_id: Math.floor(Math.random() * 10000),
+        timestamp: Date.now(),
         chit_content: this.state.inputText,
         location: {
           longitude: 0,
@@ -119,15 +106,30 @@ class FeedScreen extends Component {
         },
       });
       console.log('body: ' + body);
+
+      await postChit(body, this.state.authToken);
     }
   };
-
-  async getChitData() {
-    var responseJson = await getChits();
-    this.setState({
-      isLoading: false,
-      chitData: responseJson,
-    });
+  alertLoginNeeded() {
+    Alert.alert(
+      'Sorry!',
+      'You need to log in to share chits.',
+      [
+        {
+          text: 'Log in',
+          onPress: () => this.props.navigation.navigate('Landing'),
+        },
+        {
+          text: 'Sign up',
+          onPress: () => this.props.navigation.navigate('Registration'),
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: true},
+    );
   }
 
   render() {

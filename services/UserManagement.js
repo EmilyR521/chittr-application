@@ -12,7 +12,7 @@ export const login = async (email, password) => {
   })
     .then(response => response.json())
     .then(responseJson => {
-      console.log('loginResponse: ' + JSON.stringify(responseJson));
+      // console.log('loginResponse: ' + JSON.stringify(responseJson));
       result = responseJson;
     })
     .catch(error => {

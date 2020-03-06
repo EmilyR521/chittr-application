@@ -1,17 +1,13 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import HomeScreen from './screens/HomeScreen';
 import RegistrationScreen from './screens/RegistrationScreen';
 import LandingScreen from './screens/LandingScreen';
 import FeedScreen from './screens/FeedScreen';
 import AccountScreen from './screens/AccountScreen';
 import FollowListScreen from './screens/FollowListScreen';
-import UpdateAccountScreen from './screens/UpdateAccount';
+import UpdateAccountScreen from './screens/UpdateAccountScreen';
 
 const AppStackNav = createStackNavigator({
-  // Home: {
-  //   screen: HomeScreen
-  // },
   Landing: {
     screen: LandingScreen
   },
@@ -28,7 +24,7 @@ const AppStackNav = createStackNavigator({
     screen: UpdateAccountScreen
   },
   FollowList:{
-    screen:FollowListScreen
+    screen: FollowListScreen
   }
 });
 

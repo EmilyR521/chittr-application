@@ -24,7 +24,6 @@ export const postChit = async (body, authToken) => {
   })
     .then(response => response.json())
     .then(responseJson => {
-      console.log('loginResponse: ' + JSON.stringify(responseJson));
       result = responseJson;
     })
     .catch(error => {

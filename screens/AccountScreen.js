@@ -115,11 +115,19 @@ class AccountScreen extends Component {
           }}>
           <Button
             title="Followers"
-            onPress={() => this.props.navigation.navigate('FollowList')}
+            onPress={() => this.props.navigation.navigate('FollowList', {
+                authToken: this.state.authToken,
+                userId: this.state.userId,
+                followListType: "followers"
+              })}
           />
           <Button
             title="Following"
-            onPress={() => this.props.navigation.navigate('FollowList')}
+            onPress={() => this.props.navigation.navigate('FollowList', {
+                authToken: this.state.authToken,
+                userId: this.state.userId,
+                followListType: "following"
+              })}
           />
            <Button
             title="Feed"
