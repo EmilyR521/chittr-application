@@ -1,30 +1,20 @@
 import React, {Component} from 'react';
 
+import Geolocation from 'react-native-geolocation-service';
 import {NavigationEvents} from 'react-navigation';
 import {
-  Image,
   View,
   FlatList,
-  StyleSheet,
   ActivityIndicator,
   Alert,
+  PermissionsAndroid,
 } from 'react-native';
 import {Chit} from '../components/chit';
 import CreateChit from '../components/createChit';
 import {getChits} from '../services/PostingChits';
 import {getUserDetails} from '../services/UserManagement';
 import {postChit} from '../services/PostingChits';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  bottom: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    marginBottom: 5,
-  },
-});
+import {styles} from '../styles/FeedScreen.style';
 
 class FeedScreen extends Component {
   constructor(props) {
@@ -45,6 +35,8 @@ class FeedScreen extends Component {
       authToken: token,
       userId: id,
       userData: null,
+      location: null,
+      locationPermission: false,
     };
   }
 
@@ -67,6 +59,7 @@ class FeedScreen extends Component {
       inputText: e,
     });
   };
+
   async getChitData() {
     var responseJson = await getChits();
     this.setState({
@@ -82,11 +75,11 @@ class FeedScreen extends Component {
       isLoading: false,
       userData: responseJson,
     });
-
-    console.log('userData: ' + this.state.userData);
   };
 
   onSubmit = async () => {
+    var loc = await this.findCoordinates();
+    console.log('loc:' + JSON.stringify(loc));
     if (this.state.userData == null) {
       this.alertLoginNeeded;
     } else {
@@ -95,8 +88,10 @@ class FeedScreen extends Component {
         timestamp: Date.now(),
         chit_content: this.state.inputText,
         location: {
-          longitude: 0,
-          latitude: 0,
+          longitude:
+            this.state.location != null ? this.state.location.longitude : 0,
+          latitude:
+            this.state.location != null ? this.state.location.latitude : 0,
         },
         user: {
           user_id: this.state.userId,
@@ -108,8 +103,13 @@ class FeedScreen extends Component {
       console.log('body: ' + body);
 
       await postChit(body, this.state.authToken);
+
+      ///THEN ADD IMAGE
+
+      this.getChitData();
     }
   };
+
   alertLoginNeeded() {
     Alert.alert(
       'Sorry!',
@@ -132,6 +132,50 @@ class FeedScreen extends Component {
     );
   }
 
+  async requestLocationPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'This app requires access to your location.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can access location');
+        return true;
+      } else {
+        console.log('Location permission denied');
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  findCoordinates = async () => {
+    if (!this.state.locationPermission) {
+      this.state.locationPermission = await this.requestLocationPermission();
+    }
+    Geolocation.getCurrentPosition(
+      position => {
+        const location = JSON.stringify(position);
+        this.setState({location});
+      },
+      error => {
+        Alert.alert(error.message);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 1000,
+      },
+    );
+  };
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -146,10 +190,9 @@ class FeedScreen extends Component {
         <NavigationEvents onWillFocus={() => this.onFocus()} />
 
         <FlatList
+          style={styles.list}
           data={this.state.chitData}
-          renderItem={({item}) => (
-            <Chit chit_content={item.chit_content} user={item.user} />
-          )}
+          renderItem={({item}) => <Chit chit={item} user={item.user} />}
           keyExtractor={item => item.chit_id}
         />
 
@@ -157,6 +200,9 @@ class FeedScreen extends Component {
           <CreateChit
             onChangeTextHandler={this.onChangeTextHandler}
             onSubmit={this.onSubmit}
+            navigation={this.props.navigation}
+            authToken={this.state.authToken}
+            userId={this.state.userId}
           />
         </View>
       </View>

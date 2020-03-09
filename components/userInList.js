@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, View, Text, StyleSheet, Button} from 'react-native';
+import {Image, View, Text, StyleSheet, Button, TouchableHighlight} from 'react-native';
 
 const styles = StyleSheet.create({
   chit: {
@@ -26,23 +26,40 @@ class UserInList extends Component {
   }
 
   render() {
-    const {onFollow} = this.props;
+    const {onFollow} = this.props;    
+    const {navigation} = this.props;
+    var buttonTitle = this.props.isFollowed ? 'Unfollow' : 'Follow';
     return (
       <View style={styles.chit}>
-        <Image
-          style={styles.chit_photo}
-          source={require('./../assets/personDefault.png')}
-        />
+        <View>
+          <TouchableHighlight
+            onPress={() =>
+              this.props.navigation.navigate('Account', {
+                authToken: this.state.authToken,
+                userId: this.props.user.user_id,
+              })
+            }>
+            <Image
+              source={{
+                uri:
+                  `http://10.0.2.2:3333/api/v0.0.5/user/${this.props.user.user_id}/photo?` +
+                  Date.now(),
+              }}
+              defaultSource={require('../assets/personDefault.png')}
+              style={styles.chit_photo}
+            />
+          </TouchableHighlight>
+        </View>
         <View style={styles.chit_content}>
           <Text style={styles.user}>
             {' '}
             {this.props.user.given_name} {this.props.user.family_name}
           </Text>
           <Button
-            title="Follow"
+            title={buttonTitle}
             onPress={() => {
               console.log('hit follow');
-              onFollow(this.props.user);
+              onFollow(this.props.user, buttonTitle);
             }}
           />
         </View>

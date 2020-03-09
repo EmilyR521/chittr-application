@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {Image, View, Button, StyleSheet, TextInput} from 'react-native';
+import {
+  Image,
+  View,
+  Button,
+  StyleSheet,
+  TextInput,
+  TouchableHighlight,
+} from 'react-native';
 
 const styles = StyleSheet.create({
   bar: {
@@ -27,13 +34,24 @@ class CreateChit extends Component {
   render() {
     const {onChangeTextHandler} = this.props;
     const {onSubmit} = this.props;
+    const {navigation} = this.props;
+    const {authToken} = this.props;
+    const {userId} = this.props;
     return (
       <View style={styles.bar}>
         <View style={styles.barContent}>
-          <Image
-            style={styles.photo_icon}
-            source={require('./../assets/EditPencil.png')}
-          />
+          <TouchableHighlight
+            onPress={() =>
+              navigation.navigate('Camera', {
+                authToken: authToken,
+                userId: userId,
+              })
+            }>
+            <Image
+              style={styles.photo_icon}
+              source={require('./../assets/CameraIcon.png')}
+            />
+          </TouchableHighlight>
           <View style={styles.content}>
             <View
               style={{
@@ -46,11 +64,8 @@ class CreateChit extends Component {
                 multiline
                 numberOfLines={3}
                 editable
-                maxLength={40}
+                maxLength={141}
                 onChange={event => {
-                  console.log(
-                    'event: ' + JSON.stringify(event.nativeEvent.text),
-                  );
                   this.setState({
                     text: event.nativeEvent.text,
                   });
@@ -64,7 +79,6 @@ class CreateChit extends Component {
           <Button
             title="Submit"
             onPress={() => {
-              console.log('submitted');
               onSubmit();
             }}
           />

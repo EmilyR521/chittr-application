@@ -74,14 +74,45 @@ export const createUser = async (given_name, family_name, email, password) => {
 };
 
 export const updateUser = async (userId, bodyString, authToken) => {
-  await fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+userId, {
+  await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json',      
-      'X-Authorization': authToken
+      'Content-Type': 'application/json',
+      'X-Authorization': authToken,
     },
     body: bodyString,
   }).catch(error => {
     console.error(error);
   });
+};
+
+export const getUserPhoto = async userId => {
+  var result;
+  await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/photo')
+    .then(response => response.text())
+    .then(responseText => {
+      console.log(responseText);
+      result = responseText;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  return result;
+};
+
+export const setUserPhoto = async (body, authToken) => {
+  return fetch('http://10.0.2.2:3333/api/v0.0.5/user/photo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'image/jpeg',
+      'X-Authorization': authToken,
+    },
+    body: body,
+  })
+    .then(response => {
+      console.log('Picture Added!');
+    })
+    .catch(error => {
+      console.error(error);
+    });
 };

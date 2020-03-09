@@ -32,3 +32,36 @@ export const postChit = async (body, authToken) => {
 
   return result;
 };
+
+export const getChitPhoto = async chitId => {
+  var result;
+  await fetch('http://10.0.2.2:3333/api/v0.0.5/chits/' + chitId + '/photo')
+    .then(response => response.text())
+    .then(responseText => {
+      console.log(responseText);
+      result = responseText;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  return result;
+};
+
+export const setChitPhoto = async (body, authToken, chitId) => {
+  return fetch('http://10.0.2.2:3333/api/v0.0.5/chits/'+chitId+'/photo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'image/jpeg',
+      'X-Authorization': authToken,
+    },
+    body: body,
+  })
+    .then(response => {
+      console.log('Picture Added!');
+    })
+    .catch(error => {
+      console.error(error);
+    });
+};
+
+

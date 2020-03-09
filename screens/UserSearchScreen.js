@@ -1,20 +1,23 @@
 import React, {Component} from 'react';
-import {NavigationEvents} from 'react-navigation';
 import {
+  Text,
   View,
+  StyleSheet,
   FlatList,
   ActivityIndicator,
+  TextInput,
+  Button,
 } from 'react-native';
 import {
   getFollowList,
   followUser,
   unfollowUser,
+  searchUser,
 } from '../services/FollowerManagement';
 import UserInList from '../components/userInList';
-import {styles} from '../styles/FollowListScreen.style';
+import {styles} from '../styles/UserSearchScreen.style';
 
-
-class FollowListScreen extends Component {
+class UserSearchScreen extends Component {
   constructor(props) {
     super(props);
 
@@ -29,22 +32,13 @@ class FollowListScreen extends Component {
         : '';
 
     this.state = {
-      isLoading: true,
       authToken: token,
       userId: id,
-      followListType: this.props.navigation.state.params.followListType,
+      query: '',
       userList: [],
-      peopleIFollow: [],
       peopleThatFollowMe: [],
+      peopleIFollow: [],
     };
-  }
-
-  componentDidMount() {
-    this.getUserLists();
-  }
-
-  onFocus() {
-    this.getUserLists();
   }
 
   async getUserLists() {
@@ -52,22 +46,23 @@ class FollowListScreen extends Component {
     this.setState({
       peopleIFollow: responseJson,
     });
-    console.log('following' + JSON.stringify(this.state.peopleIFollow));
-
     responseJson = await getFollowList(this.state.userId, 'followers');
     this.setState({
       peopleThatFollowMe: responseJson,
     });
-    console.log('followers' + JSON.stringify(this.state.peopleThatFollowMe));
+  }
 
+  searchUsers = async () => {
+    var responseJson = await searchUser(this.state.query);
     this.setState({
       isLoading: false,
-      userList:
-        this.state.followListType == 'followers'
-          ? this.state.peopleThatFollowMe
-          : this.state.peopleIFollow,
+      userList: responseJson,
     });
-    console.log('userList: ' + JSON.stringify(this.state.userList));
+    console.log('userList' + JSON.stringify(this.state.userList));
+  };
+
+  onSubmit() {
+    this.searchUsers();
   }
 
   isUserFollowed(userId) {
@@ -77,12 +72,14 @@ class FollowListScreen extends Component {
 
   async follow(userId) {
     var responseJson = await followUser(userId, this.state.authToken);
-    this.getUserLists();
+    await this.getUserLists();
+    this.searchUsers();
   }
 
   async unfollow(userId) {
     var responseJson = await unfollowUser(userId, this.state.authToken);
-    this.getUserLists();
+    await this.getUserLists();
+    this.searchUsers();
   }
 
   onFollowPress = (user, followType) => {
@@ -94,30 +91,42 @@ class FollowListScreen extends Component {
   };
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View>
-          <ActivityIndicator />
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          <NavigationEvents onWillFocus={() => this.onFocus()} />
-          <FlatList
-            data={this.state.userList}
-            renderItem={({item}) => (
-              <UserInList
-                user={item}
-                isFollowed={this.isUserFollowed(item.user_id)}
-                onFollow={this.onFollowPress}
-              />
-            )}
-            keyExtractor={item => item.user_id}
-          />
-        </View>
-      );
-    }
+    return (
+      <View style={styles.container}>
+        <TextInput
+          {...this.props}
+          editable
+          maxLength={40}
+          onChange={event => {
+            console.log('event: ' + JSON.stringify(event.nativeEvent.text));
+            this.setState({
+              query: event.nativeEvent.text,
+            });
+          }}
+          value={this.state.text}
+          placeholder={'Type a message...'}
+        />
+        <Button
+          title="search"
+          onPress={() => {
+            console.log('searched' + this.state.query);
+            this.onSubmit();
+          }}
+        />
+        <FlatList
+          data={this.state.userList}
+          renderItem={({item}) => (
+            <UserInList
+              user={item}
+              navigation={this.props.navigation}
+              isFollowed={this.isUserFollowed(item.user_id)}
+              onFollow={this.onFollowPress}
+            />
+          )}
+          keyExtractor={item => item.user_id}
+        />
+      </View>
+    );
   }
 }
-export default FollowListScreen;
+export default UserSearchScreen;

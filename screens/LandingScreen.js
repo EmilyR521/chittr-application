@@ -1,11 +1,17 @@
 import React, {Component} from 'react';
 import {Text, View, Image, TextInput, Button} from 'react-native';
 import {login} from '../services/UserManagement';
+import {styles} from '../styles/LandingScreen.style';
 
-class LandingScreen extends Component {
+class LandingScreen extends Component {  
   constructor(props) {
     super(props);
-    this.state = {email: '', password: ''};
+    this.state = {
+      email: '',
+      password: '',
+      location: null,
+      locationPermission: false,
+    };
   }
 
   async submit() {
@@ -75,6 +81,7 @@ class LandingScreen extends Component {
             this.props.navigation.navigate('Feed', {authToken: '', userId: ''})
           }
         />
+       
       </View>
     );
   }
