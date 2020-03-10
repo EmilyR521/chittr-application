@@ -1,3 +1,5 @@
+import GLOBAL from '../global';
+
 export const login = async (email, password) => {
   var result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/login', {
@@ -12,7 +14,6 @@ export const login = async (email, password) => {
   })
     .then(response => response.json())
     .then(responseJson => {
-      // console.log('loginResponse: ' + JSON.stringify(responseJson));
       result = responseJson;
     })
     .catch(error => {
@@ -22,12 +23,12 @@ export const login = async (email, password) => {
   return result;
 };
 
-export const logout = async authToken => {
+export const logout = async () => {
   await fetch('http://10.0.2.2:3333/api/v0.0.5/logout', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Authorization': authToken,
+      'X-Authorization': GLOBAL.authToken,
     },
     body: JSON.stringify({}),
   }).catch(error => {
@@ -73,12 +74,12 @@ export const createUser = async (given_name, family_name, email, password) => {
   return result;
 };
 
-export const updateUser = async (userId, bodyString, authToken) => {
-  await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId, {
+export const updateUser = async bodyString => {
+  await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + GLOBAL.currentUser, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      'X-Authorization': authToken,
+      'X-Authorization': GLOBAL.authToken,
     },
     body: bodyString,
   }).catch(error => {
@@ -100,12 +101,12 @@ export const getUserPhoto = async userId => {
   return result;
 };
 
-export const setUserPhoto = async (body, authToken) => {
+export const setUserPhoto = async body => {
   return fetch('http://10.0.2.2:3333/api/v0.0.5/user/photo', {
     method: 'POST',
     headers: {
       'Content-Type': 'image/jpeg',
-      'X-Authorization': authToken,
+      'X-Authorization': GLOBAL.authToken,
     },
     body: body,
   })

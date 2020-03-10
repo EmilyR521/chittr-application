@@ -12,26 +12,19 @@ import {
 } from '../services/FollowerManagement';
 import UserInList from '../components/userInList';
 import {styles} from '../styles/FollowListScreen.style';
-
+import GLOBAL from '../global';
 
 class FollowListScreen extends Component {
   constructor(props) {
     super(props);
-
-    var token =
-      this.props.navigation.state.params.authToken != null
-        ? this.props.navigation.state.params.authToken
-        : '';
-
-    var id =
-      this.props.navigation.state.params.userId != null
-        ? this.props.navigation.state.params.userId
-        : '';
+    // var id =
+    //   this.props.navigation.state.params.userId != null
+    //     ? this.props.navigation.state.params.userId
+    //     : '';
 
     this.state = {
       isLoading: true,
-      authToken: token,
-      userId: id,
+      userId: GLOBAL.currentUser,
       followListType: this.props.navigation.state.params.followListType,
       userList: [],
       peopleIFollow: [],
@@ -52,13 +45,11 @@ class FollowListScreen extends Component {
     this.setState({
       peopleIFollow: responseJson,
     });
-    console.log('following' + JSON.stringify(this.state.peopleIFollow));
 
     responseJson = await getFollowList(this.state.userId, 'followers');
     this.setState({
       peopleThatFollowMe: responseJson,
     });
-    console.log('followers' + JSON.stringify(this.state.peopleThatFollowMe));
 
     this.setState({
       isLoading: false,
@@ -67,7 +58,6 @@ class FollowListScreen extends Component {
           ? this.state.peopleThatFollowMe
           : this.state.peopleIFollow,
     });
-    console.log('userList: ' + JSON.stringify(this.state.userList));
   }
 
   isUserFollowed(userId) {

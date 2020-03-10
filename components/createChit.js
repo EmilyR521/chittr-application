@@ -35,17 +35,13 @@ class CreateChit extends Component {
     const {onChangeTextHandler} = this.props;
     const {onSubmit} = this.props;
     const {navigation} = this.props;
-    const {authToken} = this.props;
-    const {userId} = this.props;
+
     return (
       <View style={styles.bar}>
         <View style={styles.barContent}>
           <TouchableHighlight
             onPress={() =>
-              navigation.navigate('Camera', {
-                authToken: authToken,
-                userId: userId,
-              })
+              navigation.navigate('Camera')
             }>
             <Image
               style={styles.photo_icon}
@@ -72,7 +68,7 @@ class CreateChit extends Component {
                   onChangeTextHandler(event.nativeEvent.text);
                 }}
                 value={this.state.text}
-                placeholder={'Type a message...'}
+                placeholder={'Type a chit...'}
               />
             </View>
           </View>

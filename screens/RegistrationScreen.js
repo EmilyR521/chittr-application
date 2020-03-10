@@ -9,8 +9,8 @@ class RegistrationScreen extends Component {
   }
 
   async submit() {    
-    var responseJson = await createUser(this.state.given_name, this.state.family_name, this.state.email,this.state.password);
-    this.props.navigation.navigate('Account', {authToken: responseJson.token, userId:responseJson.id});
+    await createUser(this.state.given_name, this.state.family_name, this.state.email,this.state.password);
+    this.props.navigation.navigate('Landing');
   }
 
   render() {

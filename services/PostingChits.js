@@ -1,3 +1,6 @@
+
+import GLOBAL from '../global';
+
 export const getChits = async () => {
   var result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/chits')
@@ -12,13 +15,13 @@ export const getChits = async () => {
   return result;
 };
 
-export const postChit = async (body, authToken) => {
+export const postChit = async (body) => {
   var result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Authorization': authToken,
+      'X-Authorization': GLOBAL.authToken,
     },
     body: body,
   })
@@ -47,12 +50,12 @@ export const getChitPhoto = async chitId => {
   return result;
 };
 
-export const setChitPhoto = async (body, authToken, chitId) => {
+export const setChitPhoto = async (body, chitId) => {
   return fetch('http://10.0.2.2:3333/api/v0.0.5/chits/'+chitId+'/photo', {
     method: 'POST',
     headers: {
       'Content-Type': 'image/jpeg',
-      'X-Authorization': authToken,
+      'X-Authorization': GLOBAL.authToken,
     },
     body: body,
   })

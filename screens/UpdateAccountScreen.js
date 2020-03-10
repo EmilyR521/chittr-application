@@ -9,18 +9,7 @@ import ImagePicker from 'react-native-image-picker';
 class UpdateAccountScreen extends Component {
   constructor(props) {
     super(props);
-    var token =
-      this.props.navigation.state.params.authToken != null
-        ? this.props.navigation.state.params.authToken
-        : '';
-    var id =
-      this.props.navigation.state.params.userId != null
-        ? this.props.navigation.state.params.userId
-        : '';
-
     this.state = {
-      authToken: token,
-      userId: id,
       email: '',
       password: '',
       given_name: '',
@@ -51,7 +40,7 @@ class UpdateAccountScreen extends Component {
   };
 
   async setProfileImage(body) {
-    await setUserPhoto(body, this.state.authToken);
+    await setUserPhoto(body);
   }
 
   async submit() {
@@ -69,16 +58,13 @@ class UpdateAccountScreen extends Component {
       body.family_name = this.state.family_name;
     }
     var bodyString = JSON.stringify(body);
-    console.log('body:' + bodyString);
+    
     if (this.state.filePath != '') {
       await this.setProfileImage(response);
     }
-    await updateUser(this.state.userId, bodyString, this.state.authToken);
+    await updateUser(bodyString);F
 
-    this.props.navigation.navigate('Account', {
-      authToken: this.state.authToken,
-      userId: this.state.userId,
-    });
+    this.props.navigation.navigate('Account');
   }
 
   render() {

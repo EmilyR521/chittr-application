@@ -8,34 +8,18 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import {RNCamera} from 'react-native-camera';
-import {setUserPhoto} from '../services/UserManagement';
-import {setChitPhoto} from '../services/PostingChits';
+// import {RNCamera} from 'react-native-camera';
+// import {setUserPhoto} from '../services/UserManagement';
+// import {setChitPhoto} from '../services/PostingChits';
 
 class CameraScreen extends Component {
   constructor(props) {
     super(props);
-    var token =
-      this.props.navigation.state.params.authToken != null
-        ? this.props.navigation.state.params.authToken
-        : '';
-
-    var userid =
-      this.props.navigation.state.params.userId != null
-        ? this.props.navigation.state.params.userId
-        : '';
-
-    var chitid =
-      this.props.navigation.state.params.chitId != null
-        ? this.props.navigation.state.params.chitId
-        : '';
-
     this.state = {
       isLoading: true,
-      authToken: token,
-      userId: userid,
-      chitId: chitid,
     };
+
+    console.log(JSON.stringify(this.state));
   }
 
   async takePicture() {
@@ -49,18 +33,10 @@ class CameraScreen extends Component {
       }
     }
   }
-
-  async setProfileImage(body) {
-    await setUserPhoto(body, this.state.authToken);
-  }
-
-  async setChitImage(body) {
-    await setChitPhoto(body, this.state.authToken, this.state.chitId);
-  }
-
+  
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <RNCamera
           ref={ref => {
             this.camera = ref;
@@ -68,7 +44,9 @@ class CameraScreen extends Component {
           style={styles.preview}
         />
         <View style={{flex: 0, flexDirection: 'row', justifyContent: 'center'}}>
-          <TouchableOpacity onPress={this.takePicture()} style={styles.capture}>
+          <TouchableOpacity
+            onPress={this.takePicture.bind(this)}
+            style={styles.capture}>
             <Text style={{fontSize: 16}}>CAPTURE</Text>
           </TouchableOpacity>
         </View>

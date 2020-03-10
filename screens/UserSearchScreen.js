@@ -1,13 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  TextInput,
-  Button,
-} from 'react-native';
+import {View, FlatList, TextInput, Button} from 'react-native';
 import {
   getFollowList,
   followUser,
@@ -16,24 +8,19 @@ import {
 } from '../services/FollowerManagement';
 import UserInList from '../components/userInList';
 import {styles} from '../styles/UserSearchScreen.style';
+import GLOBAL from '../global';
 
 class UserSearchScreen extends Component {
   constructor(props) {
     super(props);
 
-    var token =
-      this.props.navigation.state.params.authToken != null
-        ? this.props.navigation.state.params.authToken
-        : '';
-
-    var id =
-      this.props.navigation.state.params.userId != null
-        ? this.props.navigation.state.params.userId
-        : '';
+    // var id =
+    //   this.props.navigation.state.params.userId != null
+    //     ? this.props.navigation.state.params.userId
+    //     : '';
 
     this.state = {
-      authToken: token,
-      userId: id,
+      userId: GLOBAL.currentUser,
       query: '',
       userList: [],
       peopleThatFollowMe: [],

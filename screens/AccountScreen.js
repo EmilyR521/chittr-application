@@ -15,27 +15,16 @@ import {
 import {Chit} from '../components/chit';
 import {getUserDetails, logout} from '../services/UserManagement';
 import {styles} from '../styles/AccountScreen.style';
+import GLOBAL from '../global';
 
 class AccountScreen extends Component {
   constructor(props) {
     super(props);
-
-    var token =
-      this.props.navigation.state.params.authToken != null
-        ? this.props.navigation.state.params.authToken
-        : '';
-    var id =
-      this.props.navigation.state.params.userId != null
-        ? this.props.navigation.state.params.userId
-        : '';
-
     this.state = {
       isLoading: true,
+      userId: GLOBAL.currentUser,
       userData: '',
-      authToken: token,
-      userId: id,
-      profileImageUri: `http://10.0.2.2:3333/api/v0.0.5/user/${id}/photo`,
-      profileImageData: '',
+      profileImageUri:'',
     };
   }
 
@@ -60,6 +49,7 @@ class AccountScreen extends Component {
     var responseJson = await getUserDetails(this.state.userId);
     this.setState({
       userData: responseJson,
+      profileImageUri: `http://10.0.2.2:3333/api/v0.0.5/user/${this.state.userId}/photo`
     });
   }
 
@@ -104,10 +94,7 @@ class AccountScreen extends Component {
             </View>
             <TouchableHighlight
               onPress={() =>
-                this.props.navigation.navigate('UpdateAccount', {
-                  authToken: this.state.authToken,
-                  userId: this.state.userId,
-                })
+                this.props.navigation.navigate('UpdateAccount')
               }>
               <Image
                 style={{width: 50, height: 50, alignSelf: 'flex-end'}}
@@ -125,8 +112,6 @@ class AccountScreen extends Component {
               title="Followers"
               onPress={() =>
                 this.props.navigation.navigate('FollowList', {
-                  authToken: this.state.authToken,
-                  userId: this.state.userId,
                   followListType: 'followers',
                 })
               }
@@ -135,8 +120,6 @@ class AccountScreen extends Component {
               title="Following"
               onPress={() =>
                 this.props.navigation.navigate('FollowList', {
-                  authToken: this.state.authToken,
-                  userId: this.state.userId,
                   followListType: 'following',
                 })
               }
@@ -144,19 +127,13 @@ class AccountScreen extends Component {
             <Button
               title="Feed"
               onPress={() =>
-                this.props.navigation.navigate('Feed', {
-                  authToken: this.state.authToken,
-                  userId: this.state.userId,
-                })
+                this.props.navigation.navigate('Feed')
               }
             />
             <Button
               title="Search"
               onPress={() =>
-                this.props.navigation.navigate('UserSearch', {
-                  authToken: this.state.authToken,
-                  userId: this.state.userId,
-                })
+                this.props.navigation.navigate('UserSearch')
               }
             />
             <Button title="Logout" onPress={() => this.logout()} />

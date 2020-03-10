@@ -15,25 +15,15 @@ import {getChits} from '../services/PostingChits';
 import {getUserDetails} from '../services/UserManagement';
 import {postChit} from '../services/PostingChits';
 import {styles} from '../styles/FeedScreen.style';
+import GLOBAL from '../global';
 
 class FeedScreen extends Component {
   constructor(props) {
     super(props);
 
-    var token =
-      this.props.navigation.state.params.authToken != null
-        ? this.props.navigation.state.params.authToken
-        : '';
-    var id =
-      this.props.navigation.state.params.userId != null
-        ? this.props.navigation.state.params.userId
-        : '';
-
     this.state = {
       isLoading: true,
       chitData: [],
-      authToken: token,
-      userId: id,
       userData: null,
       location: null,
       locationPermission: false,
@@ -42,15 +32,15 @@ class FeedScreen extends Component {
 
   componentDidMount() {
     this.getChitData();
-    if (this.state.userId != '') {
-      this.getUserData();
+    if (GLOBAL.currentUser != '') {
+      this.getUserData(GLOBAL.currentUser);
     }
   }
 
   onFocus() {
     this.getChitData();
-    if (this.state.userId != '') {
-      this.getUserData();
+    if (GLOBAL.currentUser != '') {
+      this.getUserData(GLOBAL.currentUser);
     }
   }
 
@@ -60,17 +50,16 @@ class FeedScreen extends Component {
     });
   };
 
-  async getChitData() {
+  getChitData = async () => {
     var responseJson = await getChits();
     this.setState({
       isLoading: false,
       chitData: responseJson,
     });
-  }
+  };
 
   getUserData = async () => {
-    console.log('state: ' + this.state);
-    var responseJson = await getUserDetails(this.state.userId);
+    var responseJson = await getUserDetails(GLOBAL.currentUser);
     this.setState({
       isLoading: false,
       userData: responseJson,
@@ -94,7 +83,7 @@ class FeedScreen extends Component {
             this.state.location != null ? this.state.location.latitude : 0,
         },
         user: {
-          user_id: this.state.userId,
+          user_id: GLOBAL.currentUser,
           given_name: this.state.userData.given_name,
           family_name: this.state.userData.family_name,
           email: this.state.userData.email,
@@ -102,7 +91,7 @@ class FeedScreen extends Component {
       });
       console.log('body: ' + body);
 
-      await postChit(body, this.state.authToken);
+      await postChit(body);
 
       ///THEN ADD IMAGE
 
@@ -139,7 +128,6 @@ class FeedScreen extends Component {
         {
           title: 'Location Permission',
           message: 'This app requires access to your location.',
-          buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
         },
@@ -201,8 +189,6 @@ class FeedScreen extends Component {
             onChangeTextHandler={this.onChangeTextHandler}
             onSubmit={this.onSubmit}
             navigation={this.props.navigation}
-            authToken={this.state.authToken}
-            userId={this.state.userId}
           />
         </View>
       </View>

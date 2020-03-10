@@ -1,3 +1,6 @@
+
+import GLOBAL from '../global';
+
 export const getFollowList = async (userId, listType) => {
   var result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/' + listType)
@@ -11,13 +14,13 @@ export const getFollowList = async (userId, listType) => {
   return result;
 };
 
-export const followUser = async (userId, authToken) => {
+export const followUser = async (userId) => {
   var result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/follow', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Authorization': authToken,
+      'X-Authorization': GLOBAL.authToken,
     },
     body: JSON.stringify({}),
   }).catch(error => {
@@ -27,13 +30,13 @@ export const followUser = async (userId, authToken) => {
   return result;
 };
 
-export const unfollowUser = async (userId, authToken) => {
+export const unfollowUser = async (userId) => {
   var result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/follow', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      'X-Authorization': authToken,
+      'X-Authorization': GLOBAL.authToken,
     },
   })
   .then(response => response.text())

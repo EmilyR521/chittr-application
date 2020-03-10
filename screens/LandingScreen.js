@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Text, View, Image, TextInput, Button} from 'react-native';
 import {login} from '../services/UserManagement';
 import {styles} from '../styles/LandingScreen.style';
+import GLOBAL from '../global';
 
 class LandingScreen extends Component {  
   constructor(props) {
@@ -16,10 +17,9 @@ class LandingScreen extends Component {
 
   async submit() {
     var responseJson = await login(this.state.email, this.state.password);
-    this.props.navigation.navigate('Account', {
-      authToken: responseJson.token,
-      userId: responseJson.id,
-    });
+    GLOBAL.authToken =  responseJson.token;
+    GLOBAL.currentUser = responseJson.id,
+    this.props.navigation.navigate('Account');
   }
 
   render() {
@@ -78,7 +78,7 @@ class LandingScreen extends Component {
         <Button
           title="No thanks!"
           onPress={() =>
-            this.props.navigation.navigate('Feed', {authToken: '', userId: ''})
+            this.props.navigation.navigate('Feed')
           }
         />
        
