@@ -9,62 +9,30 @@ import UpdateAccountScreen from './screens/UpdateAccountScreen';
 import UserSearchScreen from './screens/UserSearchScreen';
 import CameraScreen from './screens/CameraScreen';
 
-import React from 'react';
-import {Button, Alert, View} from 'react-native';
-
-const styles = {
-  backgroundColor: '#FAE1DF',
-  height: 40,
-};
-
 const AppStackNav = createStackNavigator({
   Landing: {
     screen: LandingScreen,
-    navigationOptions: {
-      headerStyle: styles,
-    },
   },
   Registration: {
     screen: RegistrationScreen,
-    navigationOptions: {
-      headerStyle: styles,
-    },
   },
   Feed: {
     screen: FeedScreen,
-    navigationOptions: {
-      headerStyle: styles,
-    },
   },
   Account: {
     screen: AccountScreen,
-    navigationOptions: {
-      headerStyle: styles,
-    },
   },
   UpdateAccount: {
     screen: UpdateAccountScreen,
-    navigationOptions: {
-      headerStyle: styles,
-    },
   },
   FollowList: {
     screen: FollowListScreen,
-    navigationOptions: {
-      headerStyle: styles,
-    },
   },
   UserSearch: {
     screen: UserSearchScreen,
-    navigationOptions: {
-      headerStyle: styles,
-    },
   },
   Camera: {
     screen: CameraScreen,
-    navigationOptions: {
-      headerStyle: styles,
-    },
   },
 });
 

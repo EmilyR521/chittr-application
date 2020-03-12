@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
 import {NavigationEvents} from 'react-navigation';
-import {
-  View,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import {View, FlatList, ActivityIndicator} from 'react-native';
 import {
   getFollowList,
   followUser,
@@ -13,8 +9,17 @@ import {
 import UserInList from '../components/userInList';
 import {styles} from '../styles/FollowListScreen.style';
 import GLOBAL from '../global';
+import {headerStyles} from '../styles/Header.style';
+import headerRightView from '../components/headerRight';
 
 class FollowListScreen extends Component {
+  static navigationOptions = ({navigation}) => {
+    var loggedIn = GLOBAL.currentUser != '';
+    return {
+      headerStyle: headerStyles.headerBar,
+      headerRight: headerRightView(true, loggedIn, true, navigation),
+    };
+  };
   constructor(props) {
     super(props);
     // var id =
@@ -66,12 +71,12 @@ class FollowListScreen extends Component {
   }
 
   async follow(userId) {
-    var responseJson = await followUser(userId, this.state.authToken);
+    await followUser(userId, this.state.authToken);
     this.getUserLists();
   }
 
   async unfollow(userId) {
-    var responseJson = await unfollowUser(userId, this.state.authToken);
+    await unfollowUser(userId, this.state.authToken);
     this.getUserLists();
   }
 
@@ -101,6 +106,7 @@ class FollowListScreen extends Component {
                 user={item}
                 isFollowed={this.isUserFollowed(item.user_id)}
                 onFollow={this.onFollowPress}
+                navigation={this.props.navigation}
               />
             )}
             keyExtractor={item => item.user_id}

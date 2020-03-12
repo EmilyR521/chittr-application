@@ -1,10 +1,24 @@
 import React, {Component} from 'react';
-import {Text, View, Image, TextInput, Button} from 'react-native';
+import {Text, View, Image, TextInput, Button, StatusBar} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {login} from '../services/UserManagement';
 import {styles} from '../styles/LandingScreen.style';
+import {headerStyles} from '../styles/Header.style';
+import headerRightView from '../components/headerRight';
 import GLOBAL from '../global';
+import themeColours from '../styles/themeColours';
+import {globalStyles} from '../styles/Global.style' ;
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
-class LandingScreen extends Component {  
+class LandingScreen extends Component {
+  static navigationOptions = ({navigation}) => {
+    return {
+      headerTitle:'',
+      headerStyle: headerStyles.headerBar,
+      headerRight: headerRightView(true, false, true, navigation),
+    };
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -17,72 +31,72 @@ class LandingScreen extends Component {
 
   async submit() {
     var responseJson = await login(this.state.email, this.state.password);
-    GLOBAL.authToken =  responseJson.token;
-    GLOBAL.currentUser = responseJson.id,
-    this.props.navigation.navigate('Account');
+    GLOBAL.authToken = responseJson.token;
+    (GLOBAL.currentUser = responseJson.id),
+      this.props.navigation.navigate('Account', {});
   }
 
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-        }}>
-        <Image
-          style={{
-            width: 100,
-            height: 100,
-          }}
-          source={require('./../assets/logo.png')}
-        />
-
-        <TextInput
-          style={{height: 40}}
-          placeholder="Email"
-          onChangeText={email => this.setState({email})}
-          value={this.state.email}
-        />
-
-        <TextInput
-          style={{height: 40}}
-          placeholder="Password"
-          onChangeText={password => this.setState({password})}
-          value={this.state.password}
-        />
-
-        <Button
-          title="Login"
-          onPress={() => {
-            this.submit();
-          }}
-        />
-
-        <View
-          style={{
-            alignSelf: 'stretch',
-            borderBottomColor: 'black',
-            borderBottomWidth: 0.5,
-          }}
-        />
-
-        <Text>New here? Create an account to start your chittr story!</Text>
-
-        <Button
-          title="Register"
-          onPress={() => this.props.navigation.navigate('Registration')}
-        />
-
-        <Button
-          title="No thanks!"
-          onPress={() =>
-            this.props.navigation.navigate('Feed')
-          }
-        />
-       
-      </View>
+      <KeyboardAwareScrollView
+        style={globalStyles.bgContainer}
+        resetScrollToCoords={{x: 0, y: 0}}
+        contentContainerStyle={globalStyles.container}
+        scrollEnabled={false}>
+        <StatusBar backgroundColor={themeColours.darkBlue}></StatusBar>
+        <View style={globalStyles.container}>
+          <Image style={styles.logo} source={require('./../assets/logo.png')} />
+          <View>
+            <Text style={styles.infoText}> Email</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={email => this.setState({email})}
+              value={this.state.email}
+            />
+          </View>
+          <View>
+            <Text style={styles.infoText}>Password</Text>
+            <TextInput
+              style={styles.textInput}
+              secureTextEntry
+              onChangeText={password => this.setState({password})}
+              value={this.state.password}
+            />
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                this.submit();
+              }}>
+              <View style={styles.loginRegButton}>
+                <Text style={styles.buttonText}>Login</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.hr} />
+          <Text style={styles.infoText}>
+            New here? Create an account to start your chittr story!
+          </Text>
+          <View>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Registration')}>
+              <View style={styles.loginRegButton}>
+                <Text style={styles.buttonText}>Register</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Feed')}>
+              <View style={styles.skipLoginButton}>
+                <Text style={styles.skipLoginText}>
+                  No thanks, just take me to the feed.
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAwareScrollView>
     );
   }
 }

@@ -1,4 +1,3 @@
-
 import GLOBAL from '../global';
 
 export const getChits = async () => {
@@ -15,7 +14,7 @@ export const getChits = async () => {
   return result;
 };
 
-export const postChit = async (body) => {
+export const postChit = async body => {
   var result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
     method: 'POST',
@@ -39,19 +38,23 @@ export const postChit = async (body) => {
 export const getChitPhoto = async chitId => {
   var result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/chits/' + chitId + '/photo')
-    .then(response => response.text())
-    .then(responseText => {
-      console.log(responseText);
-      result = responseText;
+    .then(response => {
+      if (response.status == 200) {
+        result = true;
+      } else{
+        result = false;
+      }
     })
     .catch(error => {
       console.log(error);
+      result = false;
     });
+
   return result;
 };
 
 export const setChitPhoto = async (body, chitId) => {
-  return fetch('http://10.0.2.2:3333/api/v0.0.5/chits/'+chitId+'/photo', {
+  return fetch('http://10.0.2.2:3333/api/v0.0.5/chits/' + chitId + '/photo', {
     method: 'POST',
     headers: {
       'Content-Type': 'image/jpeg',
@@ -66,5 +69,3 @@ export const setChitPhoto = async (body, chitId) => {
       console.error(error);
     });
 };
-
-

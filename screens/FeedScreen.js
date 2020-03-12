@@ -1,54 +1,46 @@
 import React, {Component} from 'react';
-
-import Geolocation from 'react-native-geolocation-service';
 import {NavigationEvents} from 'react-navigation';
-import {
-  View,
-  FlatList,
-  ActivityIndicator,
-  Alert,
-  PermissionsAndroid,
-} from 'react-native';
-import {Chit} from '../components/chit';
+import {View, FlatList, ActivityIndicator} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Chit from '../components/chit';
 import CreateChit from '../components/createChit';
 import {getChits} from '../services/PostingChits';
-import {getUserDetails} from '../services/UserManagement';
-import {postChit} from '../services/PostingChits';
 import {styles} from '../styles/FeedScreen.style';
-import GLOBAL from '../global';
+import {headerStyles} from '../styles/Header.style';
+import headerRightView from '../components/headerRight';
+import {globalStyles} from '../styles/Global.style';
 
 class FeedScreen extends Component {
+  static navigationOptions = ({navigation}) => {
+    var loggedIn = !(
+      GLOBAL.currentUser == undefined || GLOBAL.currentUser == ''
+    );
+    return {
+      headerTitle: '',
+      headerStyle: headerStyles.headerBar,
+      headerRight: headerRightView(false, loggedIn, true, navigation),
+    };
+  };
+
   constructor(props) {
     super(props);
 
+    var imageData = this.props.navigation.state.params?.imageData;
     this.state = {
       isLoading: true,
-      chitData: [],
-      userData: null,
-      location: null,
-      locationPermission: false,
+      imageData: imageData != null ? imageData : {},
     };
   }
-
   componentDidMount() {
-    this.getChitData();
-    if (GLOBAL.currentUser != '') {
-      this.getUserData(GLOBAL.currentUser);
-    }
+    this.onFocus();
   }
-
   onFocus() {
     this.getChitData();
-    if (GLOBAL.currentUser != '') {
-      this.getUserData(GLOBAL.currentUser);
-    }
-  }
-
-  onChangeTextHandler = e => {
+    var imageData = this.props.navigation.state.params?.imageData;
     this.setState({
-      inputText: e,
+      filePath: imageData,
     });
-  };
+  }
 
   getChitData = async () => {
     var responseJson = await getChits();
@@ -56,112 +48,6 @@ class FeedScreen extends Component {
       isLoading: false,
       chitData: responseJson,
     });
-  };
-
-  getUserData = async () => {
-    var responseJson = await getUserDetails(GLOBAL.currentUser);
-    this.setState({
-      isLoading: false,
-      userData: responseJson,
-    });
-  };
-
-  onSubmit = async () => {
-    var loc = await this.findCoordinates();
-    console.log('loc:' + JSON.stringify(loc));
-    if (this.state.userData == null) {
-      this.alertLoginNeeded;
-    } else {
-      var body = JSON.stringify({
-        chit_id: Math.floor(Math.random() * 10000),
-        timestamp: Date.now(),
-        chit_content: this.state.inputText,
-        location: {
-          longitude:
-            this.state.location != null ? this.state.location.longitude : 0,
-          latitude:
-            this.state.location != null ? this.state.location.latitude : 0,
-        },
-        user: {
-          user_id: GLOBAL.currentUser,
-          given_name: this.state.userData.given_name,
-          family_name: this.state.userData.family_name,
-          email: this.state.userData.email,
-        },
-      });
-      console.log('body: ' + body);
-
-      await postChit(body);
-
-      ///THEN ADD IMAGE
-
-      this.getChitData();
-    }
-  };
-
-  alertLoginNeeded() {
-    Alert.alert(
-      'Sorry!',
-      'You need to log in to share chits.',
-      [
-        {
-          text: 'Log in',
-          onPress: () => this.props.navigation.navigate('Landing'),
-        },
-        {
-          text: 'Sign up',
-          onPress: () => this.props.navigation.navigate('Registration'),
-        },
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-      ],
-      {cancelable: true},
-    );
-  }
-
-  async requestLocationPermission() {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Location Permission',
-          message: 'This app requires access to your location.',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can access location');
-        return true;
-      } else {
-        console.log('Location permission denied');
-        return false;
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  }
-
-  findCoordinates = async () => {
-    if (!this.state.locationPermission) {
-      this.state.locationPermission = await this.requestLocationPermission();
-    }
-    Geolocation.getCurrentPosition(
-      position => {
-        const location = JSON.stringify(position);
-        this.setState({location});
-      },
-      error => {
-        Alert.alert(error.message);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000,
-      },
-    );
   };
 
   render() {
@@ -174,24 +60,34 @@ class FeedScreen extends Component {
     }
 
     return (
-      <View style={styles.container}>
+      <KeyboardAwareScrollView
+        style={globalStyles.bgContainer}
+        resetScrollToCoords={{x: 0, y: 0}}
+        contentContainerStyle={globalStyles.container}
+        scrollEnabled={false}>
         <NavigationEvents onWillFocus={() => this.onFocus()} />
-
-        <FlatList
-          style={styles.list}
-          data={this.state.chitData}
-          renderItem={({item}) => <Chit chit={item} user={item.user} />}
-          keyExtractor={item => item.chit_id}
-        />
-
-        <View style={styles.bottom}>
-          <CreateChit
-            onChangeTextHandler={this.onChangeTextHandler}
-            onSubmit={this.onSubmit}
-            navigation={this.props.navigation}
+        <View style={globalStyles.container}>
+          <FlatList
+            style={styles.list}
+            data={this.state.chitData}
+            renderItem={({item}) => (
+              <Chit
+                chit={item}
+                user={item.user}
+                navigation={this.props.navigation}
+              />
+            )}
+            keyExtractor={item => item.chit_id}
           />
         </View>
-      </View>
+        <View style={styles.bottom}>
+          <CreateChit
+            navigation={this.props.navigation}
+            imageData={this.imageData}
+            refreshList={this.getChitData}
+          />
+        </View>
+      </KeyboardAwareScrollView>
     );
   }
 }
