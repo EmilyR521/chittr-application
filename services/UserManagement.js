@@ -92,7 +92,6 @@ export const getUserPhoto = async userId => {
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/photo')
     .then(response => response.text())
     .then(responseText => {
-      console.log(responseText);
       result = responseText;
     })
     .catch(error => {

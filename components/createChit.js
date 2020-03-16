@@ -14,7 +14,7 @@ import {getChits, postChit, setChitPhoto} from '../services/PostingChits';
 import {getUserDetails} from '../services/UserManagement';
 import Geolocation from 'react-native-geolocation-service';
 import GLOBAL from '../global';
-
+import {saveChitDraft, retrieveChitDraft} from '../services/PersistData';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ImagePicker from 'react-native-image-picker';
 import themeColours from '../styles/themeColours';
@@ -23,14 +23,12 @@ import {styles} from '../styles/CreateChit.styles';
 class CreateChit extends Component {
   constructor(props) {
     super(props);
-
-    const {imageData} = route.params;
     this.state = {
       text: '',
       chitData: [],
       location: null,
       locationPermission: false,
-      filePath: imageData != null ? imageData : {},
+      filePath: {},
     };
 
     if (GLOBAL.currentUser != '') {
@@ -74,6 +72,26 @@ class CreateChit extends Component {
           await this.setChitPhoto(this.state.filePath);
         }
       }
+    }
+  };
+
+  saveDraft = async () => {
+    var loc = await this.findCoordinates();
+    if (this.state.userData == null) {
+      this.alertLoginNeeded;
+    } else {
+      var body = this.createChitPOSTBody();
+      await saveChitDraft('testKey', body);
+      console.log("saved:" + body)
+    }
+  };
+
+  retrieveDraft = async () => {
+    if (this.state.userData == null) {
+      this.alertLoginNeeded;
+    } else {
+      var body = await retrieveChitDraft('testKey');
+      console.log("retrieved:" + body)
     }
   };
 
@@ -234,9 +252,27 @@ class CreateChit extends Component {
               }}>
               <FontAwesome5
                 name={'paper-plane'}
-                size={60}
+                size={40}
                 color={themeColors.lightBlue}
               />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={async () => {
+                await this.saveDraft();
+                refreshList();
+              }}>
+              <FontAwesome5
+                name={'save'}
+                size={20}
+                color={themeColors.lightBlue}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={async () => {
+                await this.retrieveDraft('testKey');
+                refreshList();
+              }}>
+              <Text>retrieve draft</Text>
             </TouchableOpacity>
           </View>
         </View>

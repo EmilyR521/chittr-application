@@ -5,7 +5,7 @@ export const getChits = async () => {
   await fetch('http://10.0.2.2:3333/api/v0.0.5/chits')
     .then(response => response.json())
     .then(responseJson => {
-      console.log(responseJson);
+     // console.log(responseJson);
       result = responseJson;
     })
     .catch(error => {
@@ -69,3 +69,4 @@ export const setChitPhoto = async (body, chitId) => {
       console.error(error);
     });
 };
+
