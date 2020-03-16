@@ -17,18 +17,21 @@ export const styles = StyleSheet.create({
     height: 60,
   },
   chit_content: {
+    flex:1,
     marginTop: 10,
-    marginRight:10,
-    marginBottom:10,
+    marginRight: 10,
+    marginBottom: 10,
     flexDirection: 'column',
   },
   user: {
     alignSelf: 'flex-start',
-    fontWeight:"bold",
+    fontWeight: 'bold',
     fontSize: 20,
     color: themeColours.darkBlue,
   },
-  chitText:{
-      margin:10
-  }
+  chitText: {
+    flex: 1,
+    margin: 10,
+    width: '80%',
+  },
 });

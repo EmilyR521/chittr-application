@@ -24,16 +24,17 @@ class FeedScreen extends Component {
 
   constructor(props) {
     super(props);
-
     var imageData = this.props.navigation.state.params?.imageData;
     this.state = {
       isLoading: true,
       imageData: imageData != null ? imageData : {},
     };
   }
+
   componentDidMount() {
     this.onFocus();
   }
+  
   onFocus() {
     this.getChitData();
     var imageData = this.props.navigation.state.params?.imageData;
