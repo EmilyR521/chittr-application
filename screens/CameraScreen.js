@@ -14,6 +14,7 @@ import {headerStyles} from '../styles/Header.style';
 
 // Screen to take an image using the device camera
 class CameraScreen extends Component {
+  //set navigation header styles and nav buttons
   static navigationOptions = ({navigation}) => {
     return {
       headerTitle: '',
@@ -21,6 +22,8 @@ class CameraScreen extends Component {
     };
   };
 
+  //camera has a navigation property telling it where it came from, so it knows where to navigate back to.
+  //With more time, would implement cameraScreen functionality as a modal rather than separate screen
   constructor(props) {
     super(props);
     this.state = {
@@ -29,6 +32,7 @@ class CameraScreen extends Component {
     };
   }
 
+  //Use the camera API to capture a photo
   async takePicture() {
     if (this.camera) {
       const options = {quality: 0.5, base64: true};
@@ -42,6 +46,7 @@ class CameraScreen extends Component {
     }
   }
 
+  //render view containing capture button and image preview.
   render() {
     return (
       <KeyboardAwareScrollView
