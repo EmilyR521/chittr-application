@@ -12,9 +12,10 @@ import GLOBAL from '../global';
 import {headerStyles} from '../styles/Header.style';
 import headerRightView from '../components/headerRight';
 
+// Screen to display a list of users: either those following the user or followed by the user
 class FollowListScreen extends Component {
   static navigationOptions = ({navigation}) => {
-    var loggedIn = GLOBAL.currentUser != '';
+    const loggedIn = GLOBAL.currentUser != '';
     return {
       headerStyle: headerStyles.headerBar,
       headerRight: headerRightView(true, loggedIn, true, navigation),
@@ -22,10 +23,6 @@ class FollowListScreen extends Component {
   };
   constructor(props) {
     super(props);
-    // var id =
-    //   this.props.navigation.state.params.userId != null
-    //     ? this.props.navigation.state.params.userId
-    //     : '';
 
     this.state = {
       isLoading: true,
@@ -46,7 +43,7 @@ class FollowListScreen extends Component {
   }
 
   async getUserLists() {
-    var responseJson = await getFollowList(this.state.userId, 'following');
+    let responseJson = await getFollowList(this.state.userId, 'following');
     this.setState({
       peopleIFollow: responseJson,
     });
@@ -66,7 +63,7 @@ class FollowListScreen extends Component {
   }
 
   isUserFollowed(userId) {
-    var index = this.state.peopleIFollow.findIndex(a => a.user_id == userId);
+    let index = this.state.peopleIFollow.findIndex(a => a.user_id == userId);
     return index != -1 ? true : false;
   }
 

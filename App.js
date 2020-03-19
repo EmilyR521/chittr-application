@@ -8,7 +8,9 @@ import FollowListScreen from './screens/FollowListScreen';
 import UpdateAccountScreen from './screens/UpdateAccountScreen';
 import UserSearchScreen from './screens/UserSearchScreen';
 import CameraScreen from './screens/CameraScreen';
+import DraftsScreen from './screens/DraftsScreen';
 
+//Create stack navigator for moving between screens.
 const AppStackNav = createStackNavigator({
   Landing: {
     screen: LandingScreen,
@@ -33,6 +35,9 @@ const AppStackNav = createStackNavigator({
   },
   Camera: {
     screen: CameraScreen,
+  },
+  Drafts: {
+    screen: DraftsScreen,
   },
 });
 

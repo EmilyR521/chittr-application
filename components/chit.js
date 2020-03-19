@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {Image, View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {getChitPhoto} from '../services/PostingChits';
 import {styles} from '../styles/Chit.style';
-import {themeColours} from '../styles/themeColours';
 
+//component for adding to screens which display chits
 class Chit extends Component {
   constructor(props) {
     super(props);
@@ -46,12 +46,13 @@ class Chit extends Component {
 
   render() {
     const {user} = this.props;
+    console.log('user: ' + user);
     const {chit} = this.props;
     const {navigation} = this.props;
 
     return (
       <View style={styles.chit}>
-        <View style = {styles.chit_user_photo_wrapper}>
+        <View style={styles.chit_user_photo_wrapper}>
           <TouchableHighlight
             onPress={() =>
               navigation.push('Account', {
@@ -61,7 +62,7 @@ class Chit extends Component {
             <Image
               source={{
                 uri:
-                  `http://10.0.2.2:3333/api/v0.0.5/user/${user.user_id}/photo?` +
+                  `http://10.0.2.2:3333/api/v0.0.5/user/${this.props.user.user_id}/photo?` +
                   Date.now(),
               }}
               defaultSource={require('../assets/personDefault.png')}

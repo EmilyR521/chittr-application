@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
+//Any functions for accessing drafts in Async storage.
 export const saveChitDraft = async (keyString, chitJson) => {
   try {
     await AsyncStorage.setItem(keyString, chitJson);
@@ -9,18 +10,26 @@ export const saveChitDraft = async (keyString, chitJson) => {
 };
 
 export const retrieveChitDraft = async keyString => {
-  var returnValue;
+  let returnValue;
   try {
     const value = await AsyncStorage.getItem(keyString);
     if (value !== null) {
-      // We have data!!
       returnValue = value;
-      console.log(value);
     }
   } catch (error) {
-    // Error retrieving data
+    console.log(error);
   }
   return returnValue;
 };
 
-export const getAllDrafts = () => {};
+export const getAllDrafts = async () => {
+  let returnValue = [];
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+
+    returnValue = keys;
+  } catch (error) {
+    console.log(error);
+  }
+  return returnValue;
+};

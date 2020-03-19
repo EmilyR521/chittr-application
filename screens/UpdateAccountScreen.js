@@ -18,6 +18,7 @@ import {headerStyles} from '../styles/Header.style';
 import {setUserPhoto} from '../services/UserManagement';
 import ImagePicker from 'react-native-image-picker';
 
+// Screen to allow a logged in user to update their account details or profile image
 class UpdateAccountScreen extends Component {
   static navigationOptions = () => {
     return {
@@ -29,7 +30,7 @@ class UpdateAccountScreen extends Component {
   constructor(props) {
     super(props);
 
-    var imageData = this.props.navigation.state.params?.imageData;
+    const imageData = this.props.navigation.state.params?.imageData;
     this.state = {
       email: '',
       password: '',
@@ -41,11 +42,11 @@ class UpdateAccountScreen extends Component {
   }
 
   componentDidMount() {
-      this.onFocus();
+    this.onFocus();
   }
 
   onFocus() {
-    var imageData = this.props.navigation.state.params?.imageData;
+    const imageData = this.props.navigation.state.params?.imageData;
     console.log('image:' + imageData);
     this.setState({
       imageData: imageData,
@@ -53,7 +54,7 @@ class UpdateAccountScreen extends Component {
   }
 
   chooseFile = () => {
-    var options = {
+    const options = {
       title: 'Select Image',
       storageOptions: {
         skipBackup: true,
@@ -79,7 +80,7 @@ class UpdateAccountScreen extends Component {
   }
 
   async submit() {
-    var body = {};
+    const body = {};
     if (this.state.email != '') {
       body.email = this.state.email;
     }
@@ -103,7 +104,7 @@ class UpdateAccountScreen extends Component {
     }
 
     if (body != null) {
-      var bodyString = JSON.stringify(body);
+      const bodyString = JSON.stringify(body);
       await updateUser(bodyString);
     }
 

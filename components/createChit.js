@@ -13,13 +13,14 @@ import {
 import {getChits, postChit, setChitPhoto} from '../services/PostingChits';
 import {getUserDetails} from '../services/UserManagement';
 import Geolocation from 'react-native-geolocation-service';
+import {requestLocationPermission} from '../services/RequestPermissions';
 import GLOBAL from '../global';
 import {saveChitDraft, retrieveChitDraft} from '../services/PersistData';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ImagePicker from 'react-native-image-picker';
-import themeColours from '../styles/themeColours';
 import {styles} from '../styles/CreateChit.styles';
 
+//component for adding to screens which allow creating a new chit
 class CreateChit extends Component {
   constructor(props) {
     super(props);
@@ -55,13 +56,11 @@ class CreateChit extends Component {
   };
 
   onSubmit = async () => {
-    var loc = await this.findCoordinates();
-    console.log('loc:' + JSON.stringify(loc));
+    await this.findCoordinates();
     if (this.state.userData == null) {
       this.alertLoginNeeded;
     } else {
       var body = this.createChitPOSTBody();
-      console.log('body: ' + body);
       await postChit(body);
 
       const {imageData} = this.props;
@@ -75,25 +74,46 @@ class CreateChit extends Component {
     }
   };
 
-  saveDraft = async () => {
-    var loc = await this.findCoordinates();
+  manageDrafts = () => {
     if (this.state.userData == null) {
-      this.alertLoginNeeded;
+      this.alertLoginNeeded();
     } else {
-      var body = this.createChitPOSTBody();
-      await saveChitDraft('testKey', body);
-      console.log("saved:" + body)
+      Alert.alert(
+        'Drafts...',
+        'What would you like to do?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Manage drafts',
+            onPress: () => this.props.navigation.navigate('Drafts'),
+          },
+          {
+            text: 'Save chit as draft',
+            onPress: () => {
+              this.saveDraft();
+            },
+          },
+        ],
+        {cancelable: true},
+      );
     }
   };
 
-  retrieveDraft = async () => {
-    if (this.state.userData == null) {
-      this.alertLoginNeeded;
-    } else {
-      var body = await retrieveChitDraft('testKey');
-      console.log("retrieved:" + body)
-    }
+  saveDraft = async () => {
+    var body = this.createChitPOSTBody();
+    await saveChitDraft(this.state.text, body);
   };
+
+  // retrieveDraft = async key => {
+  //   if (this.state.userData == null) {
+  //     this.alertLoginNeeded;
+  //   } else {
+  //     var body = await retrieveChitDraft(key);
+  //   }
+  // };
 
   createChitPOSTBody() {
     var body = JSON.stringify({
@@ -160,32 +180,9 @@ class CreateChit extends Component {
     );
   }
 
-  async requestLocationPermission() {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Location Permission',
-          message: 'This app requires access to your location.',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can access location');
-        return true;
-      } else {
-        console.log('Location permission denied');
-        return false;
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  }
-
   findCoordinates = async () => {
     if (!this.state.locationPermission) {
-      this.state.locationPermission = await this.requestLocationPermission();
+      this.state.locationPermission = await requestLocationPermission();
     }
     Geolocation.getCurrentPosition(
       position => {
@@ -209,70 +206,72 @@ class CreateChit extends Component {
     return (
       <View style={styles.bar}>
         <View style={styles.barContent}>
-          <View style={styles.imageIcons}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Camera', {cameFrom: 'createChit'})
-              }>
-              <FontAwesome5
-                name={'camera-retro'}
-                size={30}
-                color={themeColors.lightBlue}
+          <View style={styles.contentLeft}>
+            <View style={styles.iconTabs}>
+              <View style={styles.imageIcons}>
+                <TouchableOpacity
+                  style={styles.icon}
+                  onPress={() =>
+                    navigation.navigate('Camera', {cameFrom: 'createChit'})
+                  }>
+                  <FontAwesome5
+                    name={'camera-retro'}
+                    size={30}
+                    color={themeColors.lightBlue}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.icon}
+                  onPress={this.chooseFile.bind(this)}>
+                  <FontAwesome5
+                    name={'image'}
+                    size={30}
+                    color={themeColors.lightBlue}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.draftIcons}>
+                <TouchableOpacity
+                  style={styles.icon}
+                  onPress={async () => {
+                    await this.manageDrafts();
+                  }}>
+                  <FontAwesome5
+                    name={'ellipsis-h'}
+                    size={30}
+                    color={themeColors.lightBlue}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.textInput}
+                {...this.props}
+                multiline
+                numberOfLines={3}
+                maxLength={141}
+                onChange={event => {
+                  this.setState({
+                    text: event.nativeEvent.text,
+                  });
+                }}
+                value={this.state.text}
+                placeholder={'Type a chit...'}
               />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.chooseFile.bind(this)}>
-              <FontAwesome5
-                name={'image'}
-                size={30}
-                color={themeColors.lightBlue}
-              />
-            </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.textInput}
-              {...this.props}
-              multiline
-              numberOfLines={3}
-              maxLength={141}
-              onChange={event => {
-                this.setState({
-                  text: event.nativeEvent.text,
-                });
-              }}
-              value={this.state.text}
-              placeholder={'Type a chit...'}
-            />
-          </View>
-          <View style={styles.imageIcons}>
+          <View style={styles.sendIcon}>
             <TouchableOpacity
               onPress={async () => {
                 await this.onSubmit();
                 refreshList();
               }}>
               <FontAwesome5
-                name={'paper-plane'}
-                size={40}
+                name={'angle-double-right'}
+                size={45}
                 color={themeColors.lightBlue}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={async () => {
-                await this.saveDraft();
-                refreshList();
-              }}>
-              <FontAwesome5
-                name={'save'}
-                size={20}
-                color={themeColors.lightBlue}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={async () => {
-                await this.retrieveDraft('testKey');
-                refreshList();
-              }}>
-              <Text>retrieve draft</Text>
             </TouchableOpacity>
           </View>
         </View>

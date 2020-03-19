@@ -3,18 +3,16 @@ import {
   Text,
   View,
   StyleSheet,
-  Button,
   TouchableOpacity,
-  Alert,
-  Image,
   StatusBar,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
-
 import themeColours from '../styles/themeColours';
 import {globalStyles} from '../styles/Global.style';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {headerStyles} from '../styles/Header.style';
+
+// Screen to take an image using the device camera
 class CameraScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return {
@@ -25,11 +23,9 @@ class CameraScreen extends Component {
 
   constructor(props) {
     super(props);
-
-    var cameFrom = this.props.navigation.state.params.cameFrom;
     this.state = {
       isLoading: true,
-      cameFrom: cameFrom,
+      cameFrom: this.props.navigation.state.params.cameFrom,
     };
   }
 

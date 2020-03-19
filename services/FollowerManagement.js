@@ -1,8 +1,8 @@
-
 import GLOBAL from '../global';
 
+//Any server calls which concern finding users, getting lists of followers, following/unfollowing users.
 export const getFollowList = async (userId, listType) => {
-  var result;
+  let result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/' + listType)
     .then(response => response.json())
     .then(responseJson => {
@@ -14,8 +14,8 @@ export const getFollowList = async (userId, listType) => {
   return result;
 };
 
-export const followUser = async (userId) => {
-  var result;
+export const followUser = async userId => {
+  let result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/follow', {
     method: 'POST',
     headers: {
@@ -30,8 +30,8 @@ export const followUser = async (userId) => {
   return result;
 };
 
-export const unfollowUser = async (userId) => {
-  var result;
+export const unfollowUser = async userId => {
+  let result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/follow', {
     method: 'DELETE',
     headers: {
@@ -39,26 +39,26 @@ export const unfollowUser = async (userId) => {
       'X-Authorization': GLOBAL.authToken,
     },
   })
-  .then(response => response.text())
-  .then(responseText => {
-    console.log("unfollowed: "+ responseText)
-  result = responseText;
-})
-  .catch(error => {
-    console.error(error);
-  });
+    .then(response => response.text())
+    .then(responseText => {
+      console.log('unfollowed: ' + responseText);
+      result = responseText;
+    })
+    .catch(error => {
+      console.error(error);
+    });
 
   return result;
 };
 
 export const searchUser = async query => {
-  var result;
-  var url = 'http://10.0.2.2:3333/api/v0.0.5/search_user?q=' + query;
+  let result;
+  const url = 'http://10.0.2.2:3333/api/v0.0.5/search_user?q=' + query;
   console.log(url);
   await fetch(url)
     .then(response => response.json())
     .then(responseJson => {
-        console.log("found users: "+ responseJson)
+      console.log('found users: ' + responseJson);
       result = responseJson;
     })
     .catch(error => {

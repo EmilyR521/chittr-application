@@ -1,7 +1,8 @@
 import GLOBAL from '../global';
 
+//Any server calls which concern logging in/out, creating a user or editing account (including images)
 export const login = async (email, password) => {
-  var result;
+  let result = 'invalid';
   await fetch('http://10.0.2.2:3333/api/v0.0.5/login', {
     method: 'POST',
     headers: {
@@ -12,9 +13,10 @@ export const login = async (email, password) => {
       password: password,
     }),
   })
-    .then(response => response.json())
-    .then(responseJson => {
-      result = responseJson;
+    .then(response => {
+      if (response.status == 200) {
+        result = response.json();
+      }
     })
     .catch(error => {
       console.error(error);
@@ -37,7 +39,7 @@ export const logout = async () => {
 };
 
 export const getUserDetails = async userId => {
-  var result;
+  let result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId)
     .then(response => response.json())
     .then(responseJson => {
@@ -51,17 +53,17 @@ export const getUserDetails = async userId => {
 };
 
 export const createUser = async (given_name, family_name, email, password) => {
-  var result;
+  let result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      given_name: given_name,
-      family_name: family_name,
-      email: email,
-      password: password,
+      given_name,
+      family_name,
+      email,
+      password,
     }),
   })
     .then(response => response.json())
@@ -88,7 +90,7 @@ export const updateUser = async bodyString => {
 };
 
 export const getUserPhoto = async userId => {
-  var result;
+  let result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/photo')
     .then(response => response.text())
     .then(responseText => {

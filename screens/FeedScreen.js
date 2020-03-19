@@ -10,9 +10,10 @@ import {headerStyles} from '../styles/Header.style';
 import headerRightView from '../components/headerRight';
 import {globalStyles} from '../styles/Global.style';
 
+// Screen to display recent chits from followed users
 class FeedScreen extends Component {
   static navigationOptions = ({navigation}) => {
-    var loggedIn = !(
+    const loggedIn = !(
       GLOBAL.currentUser == undefined || GLOBAL.currentUser == ''
     );
     return {
@@ -24,7 +25,7 @@ class FeedScreen extends Component {
 
   constructor(props) {
     super(props);
-    var imageData = this.props.navigation.state.params?.imageData;
+    const imageData = this.props.navigation.state.params?.imageData;
     this.state = {
       isLoading: true,
       imageData: imageData != null ? imageData : {},
@@ -34,17 +35,17 @@ class FeedScreen extends Component {
   componentDidMount() {
     this.onFocus();
   }
-  
+
   onFocus() {
     this.getChitData();
-    var imageData = this.props.navigation.state.params?.imageData;
+    const imageData = this.props.navigation.state.params?.imageData;
     this.setState({
       filePath: imageData,
     });
   }
 
   getChitData = async () => {
-    var responseJson = await getChits();
+    const responseJson = await getChits();
     this.setState({
       isLoading: false,
       chitData: responseJson,
@@ -64,22 +65,24 @@ class FeedScreen extends Component {
       <KeyboardAwareScrollView
         style={globalStyles.bgContainer}
         resetScrollToCoords={{x: 0, y: 0}}
-        contentContainerStyle={globalStyles.container}
+        contentContainerStyle={styles.container}
         scrollEnabled={false}>
         <NavigationEvents onWillFocus={() => this.onFocus()} />
-        <View style={globalStyles.container}>
-          <FlatList
-            style={styles.list}
-            data={this.state.chitData}
-            renderItem={({item}) => (
-              <Chit
-                chit={item}
-                user={item.user}
-                navigation={this.props.navigation}
-              />
-            )}
-            keyExtractor={item => item.chit_id}
-          />
+        <View style={styles.container}>
+          <View style={styles.list}>
+            <FlatList
+              style={styles.list}
+              data={this.state.chitData}
+              renderItem={({item}) => (
+                <Chit
+                  chit={item}
+                  user={item.user}
+                  navigation={this.props.navigation}
+                />
+              )}
+              keyExtractor={item => item.chit_id}
+            />
+          </View>
         </View>
         <View style={styles.bottom}>
           <CreateChit

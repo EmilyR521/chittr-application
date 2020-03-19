@@ -1,11 +1,12 @@
 import GLOBAL from '../global';
 
+//Any server calls which concern getting chits, posting chits, or getting/setting chit photos
 export const getChits = async () => {
-  var result;
+  let result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/chits')
     .then(response => response.json())
     .then(responseJson => {
-     // console.log(responseJson);
+      // console.log(responseJson);
       result = responseJson;
     })
     .catch(error => {
@@ -15,7 +16,7 @@ export const getChits = async () => {
 };
 
 export const postChit = async body => {
-  var result;
+  let result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
     method: 'POST',
     headers: {
@@ -36,12 +37,12 @@ export const postChit = async body => {
 };
 
 export const getChitPhoto = async chitId => {
-  var result;
+  let result;
   await fetch('http://10.0.2.2:3333/api/v0.0.5/chits/' + chitId + '/photo')
     .then(response => {
       if (response.status == 200) {
         result = true;
-      } else{
+      } else {
         result = false;
       }
     })
@@ -69,4 +70,3 @@ export const setChitPhoto = async (body, chitId) => {
       console.error(error);
     });
 };
-

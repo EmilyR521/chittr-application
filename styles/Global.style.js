@@ -14,5 +14,6 @@ export const globalStyles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
+    flex:1
   },
 });

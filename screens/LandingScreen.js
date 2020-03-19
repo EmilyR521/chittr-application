@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {Text, View, Image, TextInput, Button, StatusBar} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  TextInput,
+  Button,
+  StatusBar,
+  Alert,
+} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {login} from '../services/UserManagement';
 import {styles} from '../styles/LandingScreen.style';
@@ -7,13 +15,14 @@ import {headerStyles} from '../styles/Header.style';
 import headerRightView from '../components/headerRight';
 import GLOBAL from '../global';
 import themeColours from '../styles/themeColours';
-import {globalStyles} from '../styles/Global.style' ;
+import {globalStyles} from '../styles/Global.style';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
+// Screen to show on app startup, allows login or registration, or skips to feed
 class LandingScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return {
-      headerTitle:'',
+      headerTitle: '',
       headerStyle: headerStyles.headerBar,
       headerRight: headerRightView(true, false, true, navigation),
     };
@@ -21,6 +30,8 @@ class LandingScreen extends Component {
 
   constructor(props) {
     super(props);
+
+    //this.timeoutFunc = this.setTimeout.bind(this);
     this.state = {
       email: '',
       password: '',
@@ -29,11 +40,29 @@ class LandingScreen extends Component {
     };
   }
 
+  alertLoginDetailsWrong() {
+    Alert.alert(
+      'Sorry!',
+      "Those details weren't quite right. Try again?",
+      [
+        {
+          text: 'Okay',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: true},
+    );
+  }
+
   async submit() {
-    var responseJson = await login(this.state.email, this.state.password);
-    GLOBAL.authToken = responseJson.token;
-    (GLOBAL.currentUser = responseJson.id),
-      this.props.navigation.navigate('Account', {});
+    const responseJson = await login(this.state.email, this.state.password);
+    if (responseJson == 'invalid') {
+      this.alertLoginDetailsWrong();
+    } else {
+      GLOBAL.authToken = responseJson.token;
+      (GLOBAL.currentUser = responseJson.id),
+        this.props.navigation.navigate('Account', {});
+    }
   }
 
   render() {

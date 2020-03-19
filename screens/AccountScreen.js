@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {NavigationEvents} from 'react-navigation';
-
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   StatusBar,
@@ -10,7 +9,6 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
-  TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
 import {globalStyles} from '../styles/Global.style';
@@ -23,7 +21,9 @@ import headerRightView from '../components/headerRight';
 import themeColours from '../styles/themeColours';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
+// Screen to display a users profile page
 class AccountScreen extends Component {
+  //set navigation header styles and nav buttons
   static navigationOptions = ({navigation}) => {
     return {
       headerTitle: '',
@@ -32,34 +32,37 @@ class AccountScreen extends Component {
     };
   };
 
-  getNavParamId() {
-    return (id =
-      this.props.navigation.state.params.userId != null
-        ? this.props.navigation.state.params.userId
-        : GLOBAL.currentUser);
-  }
-
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
       userId: this.getNavParamId(),
       userData: '',
-      profileImageUri: '',
+      profileImageUri: `http://10.0.2.2:3333/api/v0.0.5/user/${this.state.userId}/photo`,
     };
   }
 
+  //if user navigates to another users profile (ie through the userInList component), the userId will be added to the navigation props
+  //if no nav param for userId, show logged in user's profile
+  getNavParamId() {
+    return (id =
+      this.props.navigation.state.params.userId != null
+        ? this.props.navigation.state.params.userId
+        : GLOBAL.currentUser);
+  }
+  //lifecycle hook: on component first mount, get the user data as found in the constructor.
   async componentDidMount() {
     await this.getUserData();
     this.setState({
       isLoading: false,
     });
   }
-
+  //lifecycle hook: on component re-visited, get the user data from new navParam if there is one.
   async onFocus() {
     this.setState({
       isLoading: true,
       userId: this.getNavParamId(),
+      profileImageUri: `http://10.0.2.2:3333/api/v0.0.5/user/${this.state.userId}/photo`,
     });
     await this.getUserData();
     this.setState({
@@ -67,20 +70,22 @@ class AccountScreen extends Component {
     });
   }
 
+  // use userManagement service to call to server to get user details
+
   async getUserData() {
-    var responseJson = await getUserDetails(this.state.userId);
+    let responseJson = await getUserDetails(this.state.userId);
     this.setState({
       userData: responseJson,
-      profileImageUri: `http://10.0.2.2:3333/api/v0.0.5/user/${this.state.userId}/photo`,
     });
-    this.render();
   }
 
+  //use userManagement service to call to server to log user out
   async logout() {
     await logout(this.state.authToken);
     this.props.navigation.navigate('Landing');
   }
 
+  //render view: conditional editButton component; don't show unless viewing own account
   render() {
     const editButton = (
       <TouchableOpacity

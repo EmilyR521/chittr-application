@@ -1,10 +1,9 @@
 import {StyleSheet} from 'react-native';
-
 import themeColours from './themeColours';
 export const styles = StyleSheet.create({
   user: {
     fontSize: 26,
-    fontWeight:"bold"
+    fontWeight: 'bold',
   },
   imageBorder: {
     width: 200,

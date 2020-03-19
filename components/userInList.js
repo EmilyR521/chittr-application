@@ -6,53 +6,11 @@ import {
   StyleSheet,
   Button,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
-
 import themeColours from '../styles/themeColours';
-const styles = StyleSheet.create({
-  user: {
-    flex: 1,
-    alignSelf: 'stretch',
-    marginVertical: 5,
-    flexDirection: 'row',
-    width: '100%',
-    alignSelf: 'stretch',
-    backgroundColor: '#C0EEE8',
-  },
-  user_photo_wrapper: {
-    alignSelf: 'flex-start',
-  },
-  user_photo: {
-    margin: 10,
-    width: 60,
-    height: 60,
-  },
-  user_content: {
-    marginTop: 5,
-    marginRight: 10,
-    marginBottom: 10,
-    flexDirection: 'column',
-  },
-  name: {
-    fontSize: 26,
-    alignSelf: 'flex-start',
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: themeColours.darkBlue,
-  },
-  followButton: {
-    backgroundColor: themeColours.darkBlue,
-    color: 'white',
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 3,
-  },
-  buttonText: {
-    color: 'white',
-  },
-});
 
+//component for display a user in a list of users.
 class UserInList extends Component {
   constructor(props) {
     super(props);
@@ -101,4 +59,47 @@ class UserInList extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  user: {
+    flex: 1,
+    alignSelf: 'stretch',
+    marginVertical: 5,
+    flexDirection: 'row',
+    width: '100%',
+    alignSelf: 'stretch',
+    backgroundColor: '#C0EEE8',
+  },
+  user_photo_wrapper: {
+    alignSelf: 'flex-start',
+  },
+  user_photo: {
+    margin: 10,
+    width: 60,
+    height: 60,
+  },
+  user_content: {
+    marginTop: 5,
+    marginRight: 10,
+    marginBottom: 10,
+    flexDirection: 'column',
+  },
+  name: {
+    fontSize: 26,
+    alignSelf: 'flex-start',
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: themeColours.darkBlue,
+  },
+  followButton: {
+    backgroundColor: themeColours.darkBlue,
+    color: 'white',
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    borderRadius: 3,
+  },
+  buttonText: {
+    color: 'white',
+  },
+});
 export default UserInList;

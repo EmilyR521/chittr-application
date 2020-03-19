@@ -15,6 +15,7 @@ import GLOBAL from '../global';
 import themeColours from '../styles/themeColours';
 import {globalStyles} from '../styles/Global.style';
 
+// Screen to allow new users to sign up
 class RegistrationScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return {
