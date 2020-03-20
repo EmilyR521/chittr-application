@@ -41,7 +41,7 @@ class FeedScreen extends Component {
     this.getChitData();
     const imageData = this.props.navigation.state.params?.imageData;
     this.setState({
-      filePath: imageData,
+      imageData: imageData,
     });
   }
 
@@ -88,7 +88,7 @@ class FeedScreen extends Component {
         <View style={styles.bottom}>
           <CreateChit
             navigation={this.props.navigation}
-            imageData={this.imageData}
+            imageData={this.state.imageData}
             refreshList={this.getChitData}
           />
         </View>

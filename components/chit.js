@@ -46,7 +46,6 @@ class Chit extends Component {
 
   render() {
     const {user} = this.props;
-    console.log('user: ' + user);
     const {chit} = this.props;
     const {navigation} = this.props;
 

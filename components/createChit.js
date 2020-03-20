@@ -40,10 +40,10 @@ class CreateChit extends Component {
   // call service to POST. If an image has been added by upload or camera.
   // set the photo to the chit that was just created.
   onSubmit = async () => {
-    await this.findCoordinates();
     if (this.state.userData == null) {
-      this.alertLoginNeeded;
+      this.alertLoginNeeded();
     } else {
+      await this.findCoordinates();
       var body = this.createChitPOSTBody();
       await postChit(body);
 

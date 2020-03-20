@@ -1,10 +1,8 @@
 import GLOBAL from '../global';
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {styles} from '../styles/DraftsScreen.style';
-import Chit from '../components/Chit';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {globalStyles} from '../styles/Global.style';
 import {headerStyles} from '../styles/Header.style';
@@ -12,14 +10,12 @@ import headerRightView from '../components/HeaderRight';
 import themeColours from '../styles/ThemeColours';
 import {
   View,
-  Button,
   StatusBar,
   Text,
   ScrollView,
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-
 import BackgroundTimer from 'react-native-background-timer';
 import {postChit} from '../services/PostingChits';
 import {getAllDrafts, retrieveChitDraft} from '../services/PersistData';
@@ -44,25 +40,16 @@ class DraftsScreen extends Component {
     };
   }
 
-  retrieveDraft = async key => {
-    if (this.state.userData == null) {
-      this.alertLoginNeeded;
-    } else {
-      let body = await retrieveChitDraft(key);
-      console.log('retrieved:' + body);
-    }
-  };
-
   onSubmit = async key => {
     let body = await retrieveChitDraft(key);
-    console.log('body: ' + body);
+    console.log('body:' + body);
     await postChit(body);
   };
 
   setTimeout(key, milliseconds) {
     console.log('timerSet');
     BackgroundTimer.setTimeout(() => {
-      console.log('timeComplete');
+      console.log('timerComplete');
       this.onSubmit(key);
     }, milliseconds);
   }

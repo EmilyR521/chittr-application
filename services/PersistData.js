@@ -16,8 +16,6 @@ export const retrieveChitDraft = async keyString => {
     const value = await AsyncStorage.getItem(keyString);
     if (value !== null) {
       returnValue = value;
-
-      console.log(' value: ' + chitJson);
     }
   } catch (error) {
     console.log(error);
