@@ -6,14 +6,15 @@ import {
   followUser,
   unfollowUser,
 } from '../services/FollowerManagement';
-import UserInList from '../components/userInList';
+import UserInList from '../components/UserInList';
 import {styles} from '../styles/FollowListScreen.style';
 import GLOBAL from '../global';
 import {headerStyles} from '../styles/Header.style';
-import headerRightView from '../components/headerRight';
+import headerRightView from '../components/HeaderRight';
 
 // Screen to display a list of users: either those following the user or followed by the user
 class FollowListScreen extends Component {
+  //set navigation header styles and nav buttons
   static navigationOptions = ({navigation}) => {
     const loggedIn = GLOBAL.currentUser != '';
     return {

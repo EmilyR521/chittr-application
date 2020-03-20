@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import themeColours from './themeColours';
+import themeColours from './ThemeColours';
 export const globalStyles = StyleSheet.create({
   bgContainer: {
     flex: 1,
@@ -14,6 +14,6 @@ export const globalStyles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    flex:1
+    flex: 1,
   },
 });

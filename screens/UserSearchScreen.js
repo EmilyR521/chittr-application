@@ -12,12 +12,12 @@ import {
   unfollowUser,
   searchUser,
 } from '../services/FollowerManagement';
-import UserInList from '../components/userInList';
+import UserInList from '../components/UserInList';
 import {styles} from '../styles/UserSearchScreen.style';
 import GLOBAL from '../global';
 import {headerStyles} from '../styles/Header.style';
-import headerRightView from '../components/headerRight';
-import themeColours from '../styles/themeColours';
+import headerRightView from '../components/HeaderRight';
+import themeColours from '../styles/ThemeColours';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {globalStyles} from '../styles/Global.style';
 
@@ -27,7 +27,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 class UserSearchScreen extends Component {
   //set navigation header styles and nav buttons
   static navigationOptions = ({navigation}) => {
-    const loggedIn = GLOBAL.currentUser != '';
+    let loggedIn = GLOBAL.currentUser != '';
     return {
       headerTitle: '',
       headerStyle: headerStyles.headerBar,
@@ -46,7 +46,7 @@ class UserSearchScreen extends Component {
   }
 
   async getUserLists() {
-    const responseJson = await getFollowList(this.state.userId, 'following');
+    let responseJson = await getFollowList(this.state.userId, 'following');
     this.setState({
       peopleIFollow: responseJson,
     });
@@ -57,7 +57,7 @@ class UserSearchScreen extends Component {
   }
 
   searchUsers = async () => {
-    const responseJson = await searchUser(this.state.query);
+    let responseJson = await searchUser(this.state.query);
     this.setState({
       isLoading: false,
       userList: responseJson,
@@ -70,7 +70,7 @@ class UserSearchScreen extends Component {
   }
 
   isUserFollowed(userId) {
-    const index = this.state.peopleIFollow.findIndex(a => a.user_id == userId);
+    let index = this.state.peopleIFollow.findIndex(a => a.user_id == userId);
     return index != -1 ? true : false;
   }
 

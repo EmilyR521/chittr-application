@@ -6,10 +6,11 @@ export const getFollowList = async (userId, listType) => {
   await fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + userId + '/' + listType)
     .then(response => response.json())
     .then(responseJson => {
+      console.log(JSON.stringify(responseJson));
       result = responseJson;
     })
     .catch(error => {
-      console.log(error);
+      console.error(error);
     });
   return result;
 };
@@ -24,6 +25,7 @@ export const followUser = async userId => {
     },
     body: JSON.stringify({}),
   }).catch(error => {
+    result = false;
     console.error(error);
   });
 
@@ -45,6 +47,7 @@ export const unfollowUser = async userId => {
       result = responseText;
     })
     .catch(error => {
+      result = false;
       console.error(error);
     });
 
@@ -58,7 +61,7 @@ export const searchUser = async query => {
   await fetch(url)
     .then(response => response.json())
     .then(responseJson => {
-      console.log('found users: ' + responseJson);
+      console.log('found users: ' + JSON.stringify(responseJson));
       result = responseJson;
     })
     .catch(error => {

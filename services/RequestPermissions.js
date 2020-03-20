@@ -1,3 +1,5 @@
+import {PermissionsAndroid} from 'react-native';
+
 //Permission request functions
 export const requestLocationPermission = async () => {
   try {

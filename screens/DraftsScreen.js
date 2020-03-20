@@ -4,12 +4,12 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {styles} from '../styles/DraftsScreen.style';
-import Chit from '../components/chit';
+import Chit from '../components/Chit';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {globalStyles} from '../styles/Global.style';
 import {headerStyles} from '../styles/Header.style';
-import headerRightView from '../components/headerRight';
-import themeColours from '../styles/themeColours';
+import headerRightView from '../components/HeaderRight';
+import themeColours from '../styles/ThemeColours';
 import {
   View,
   Button,
@@ -26,6 +26,7 @@ import {getAllDrafts, retrieveChitDraft} from '../services/PersistData';
 
 // Screen to display and schedule saved drafts
 class DraftsScreen extends Component {
+  //set navigation header styles and nav buttons
   static navigationOptions = ({navigation}) => {
     return {
       headerTitle: '',

@@ -12,13 +12,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {globalStyles} from '../styles/Global.style';
-import Chit from '../components/chit';
+import Chit from '../components/Chit';
 import {getUserDetails, logout} from '../services/UserManagement';
 import {styles} from '../styles/AccountScreen.style';
 import GLOBAL from '../global';
 import {headerStyles} from '../styles/Header.style';
-import headerRightView from '../components/headerRight';
-import themeColours from '../styles/themeColours';
+import headerRightView from '../components/HeaderRight';
+import themeColours from '../styles/ThemeColours';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 // Screen to display a users profile page
@@ -34,11 +34,12 @@ class AccountScreen extends Component {
 
   constructor(props) {
     super(props);
+    let id = this.getNavParamId();
     this.state = {
       isLoading: true,
-      userId: this.getNavParamId(),
+      userId: id,
       userData: '',
-      profileImageUri: `http://10.0.2.2:3333/api/v0.0.5/user/${this.state.userId}/photo`,
+      profileImageUri: `http://10.0.2.2:3333/api/v0.0.5/user/${id}/photo`,
     };
   }
 
@@ -50,6 +51,7 @@ class AccountScreen extends Component {
         ? this.props.navigation.state.params.userId
         : GLOBAL.currentUser);
   }
+
   //lifecycle hook: on component first mount, get the user data as found in the constructor.
   async componentDidMount() {
     await this.getUserData();
@@ -71,7 +73,6 @@ class AccountScreen extends Component {
   }
 
   // use userManagement service to call to server to get user details
-
   async getUserData() {
     let responseJson = await getUserDetails(this.state.userId);
     this.setState({

@@ -1,15 +1,15 @@
 import {StyleSheet} from 'react-native';
-import themeColours from './themeColours';
+import themeColours from './ThemeColours';
 
 export const styles = StyleSheet.create({
   bar: {
-    flex:1,
+    flex: 1,
     width: '100%',
     alignSelf: 'stretch',
     backgroundColor: themeColours.darkBlue,
   },
   barContent: {
-    flex:1,
+    flex: 1,
     flexDirection: 'row',
     alignSelf: 'stretch',
     width: '100%',
@@ -18,25 +18,25 @@ export const styles = StyleSheet.create({
   contentLeft: {
     flex: 6,
     flexDirection: 'column',
-    alignContent:'space-between'
+    alignContent: 'space-between',
   },
-  iconTabs:{flexDirection:"row"},
+  iconTabs: {flexDirection: 'row'},
   imageIcons: {
-    flex:1,
+    flex: 1,
     flexDirection: 'row',
-    alignSelf:'flex-start',
-    justifyContent:'flex-start',
+    alignSelf: 'flex-start',
+    justifyContent: 'flex-start',
   },
   draftIcons: {
-    flex:1,
+    flex: 1,
     flexDirection: 'row',
-    alignSelf:'flex-end',
-    justifyContent:'flex-end',
+    alignSelf: 'flex-end',
+    justifyContent: 'flex-end',
   },
   inputView: {
-    flex:3,
+    flex: 3,
     paddingLeft: 5,
-    paddingBottom:5,
+    paddingBottom: 5,
     color: 'white',
   },
   textInput: {
@@ -50,11 +50,12 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignSelf: 'flex-end',
-    justifyContent:'center',
-    marginHorizontal:5,
-    marginBottom:10
+    justifyContent: 'center',
+    marginHorizontal: 5,
+    marginBottom: 10,
   },
-  icon:{
-    paddingHorizontal:5, flexDirection:"row"
-  }
+  icon: {
+    paddingHorizontal: 5,
+    flexDirection: 'row',
+  },
 });

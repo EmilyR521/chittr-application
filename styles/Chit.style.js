@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import themeColours from './themeColours';
+import themeColours from './ThemeColours';
 export const styles = StyleSheet.create({
   chit: {
     flex: 1,
@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     height: 60,
   },
   chit_content: {
-    flex:1,
+    flex: 1,
     marginTop: 10,
     marginRight: 10,
     marginBottom: 10,

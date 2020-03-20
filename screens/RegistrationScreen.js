@@ -12,11 +12,12 @@ import {styles} from '../styles/RegistrationScreen.style';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {headerStyles} from '../styles/Header.style';
 import GLOBAL from '../global';
-import themeColours from '../styles/themeColours';
+import themeColours from '../styles/ThemeColours';
 import {globalStyles} from '../styles/Global.style';
 
 // Screen to allow new users to sign up
 class RegistrationScreen extends Component {
+  //set navigation header styles and nav buttons
   static navigationOptions = ({navigation}) => {
     return {
       headerStyle: headerStyles.headerBar,

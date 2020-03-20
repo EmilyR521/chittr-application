@@ -12,14 +12,15 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {login} from '../services/UserManagement';
 import {styles} from '../styles/LandingScreen.style';
 import {headerStyles} from '../styles/Header.style';
-import headerRightView from '../components/headerRight';
+import headerRightView from '../components/HeaderRight';
 import GLOBAL from '../global';
-import themeColours from '../styles/themeColours';
+import themeColours from '../styles/ThemeColours';
 import {globalStyles} from '../styles/Global.style';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 // Screen to show on app startup, allows login or registration, or skips to feed
 class LandingScreen extends Component {
+  //set navigation header styles and nav buttons
   static navigationOptions = ({navigation}) => {
     return {
       headerTitle: '',

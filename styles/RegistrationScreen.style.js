@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import themeColours from './themeColours';
+import themeColours from './ThemeColours';
 
 export const styles = StyleSheet.create({
   headline: {
@@ -28,7 +28,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     color: 'white',
   },
-  imagePreview:{
-    width: 80, height: 80
-  }
+  imagePreview: {
+    width: 80,
+    height: 80,
+  },
 });

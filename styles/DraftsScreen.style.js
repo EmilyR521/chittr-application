@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import themeColours from './themeColours';
+import themeColours from './ThemeColours';
 export const styles = StyleSheet.create({
   title: {fontWeight: 'bold', fontSize: 20},
   item: {flexDirection: 'column'},

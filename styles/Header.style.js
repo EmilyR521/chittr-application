@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import themeColours from './themeColours';
+import themeColours from './ThemeColours';
 
 export const headerStyles = StyleSheet.create({
   headerBar: {

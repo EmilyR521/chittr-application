@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {headerStyles} from '../styles/Header.style';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import themeColours from '../styles/themeColours';
+import themeColours from '../styles/ThemeColours';
 
 //function component which returns the View to display in the header bar. Switches nav buttons depending on availability.
 headerRightView = (feed, account, search, navigation) => {

@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
-import themeColours from '../styles/themeColours';
+import themeColours from '../styles/ThemeColours';
 
 //component for display a user in a list of users.
 class UserInList extends Component {

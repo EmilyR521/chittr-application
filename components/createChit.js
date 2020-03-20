@@ -1,21 +1,11 @@
 import React, {Component} from 'react';
-import {
-  Text,
-  View,
-  Button,
-  StyleSheet,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  Alert,
-  PermissionsAndroid,
-} from 'react-native';
+import {View, TextInput, TouchableOpacity, Alert} from 'react-native';
 import {getChits, postChit, setChitPhoto} from '../services/PostingChits';
 import {getUserDetails} from '../services/UserManagement';
 import Geolocation from 'react-native-geolocation-service';
 import {requestLocationPermission} from '../services/RequestPermissions';
 import GLOBAL from '../global';
-import {saveChitDraft, retrieveChitDraft} from '../services/PersistData';
+import {saveChitDraft} from '../services/PersistData';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ImagePicker from 'react-native-image-picker';
 import {styles} from '../styles/CreateChit.styles';
@@ -32,11 +22,13 @@ class CreateChit extends Component {
       filePath: {},
     };
 
+    //If user logged in, get user details
     if (GLOBAL.currentUser != '') {
       this.getUserData(GLOBAL.currentUser);
     }
   }
 
+  //Get current user data to add to chit body
   getUserData = async () => {
     var responseJson = await getUserDetails(GLOBAL.currentUser);
     this.setState({
@@ -44,17 +36,9 @@ class CreateChit extends Component {
     });
   };
 
-  setChitPhoto = async body => {
-    var chits = await getChits();
-    var chitsSortedByRecent = chits.sort(function(a, b) {
-      a = new Date(a.chit_timestamp);
-      b = new Date(b.chit_timestamp);
-      return a > b ? -1 : a < b ? 1 : 0;
-    });
-    var mostRecentChitId = chitsSortedByRecent[0].chit_id;
-    await setChitPhoto(body, mostRecentChitId);
-  };
-
+  // When chit submitted, check user is logged in. If so, create chit body and
+  // call service to POST. If an image has been added by upload or camera.
+  // set the photo to the chit that was just created.
   onSubmit = async () => {
     await this.findCoordinates();
     if (this.state.userData == null) {
@@ -74,6 +58,42 @@ class CreateChit extends Component {
     }
   };
 
+  //create JSON body string for new chit HTTP call
+  createChitPOSTBody() {
+    var body = JSON.stringify({
+      chit_id: 0,
+      timestamp: Date.now(),
+      chit_content: this.state.text,
+      location: {
+        longitude:
+          this.state.location != null ? this.state.location.longitude : 0,
+        latitude:
+          this.state.location != null ? this.state.location.latitude : 0,
+      },
+      user: {
+        user_id: GLOBAL.currentUser,
+        given_name: this.state.userData.given_name,
+        family_name: this.state.userData.family_name,
+        email: this.state.userData.email,
+      },
+    });
+    return body;
+  }
+
+  //get the most recently created chit and set the photo. Not feasible method for real,
+  //multi user application.
+  setChitPhoto = async body => {
+    var chits = await getChits();
+    var chitsSortedByRecent = chits.sort(function(a, b) {
+      a = new Date(a.chit_timestamp);
+      b = new Date(b.chit_timestamp);
+      return a > b ? -1 : a < b ? 1 : 0;
+    });
+    var mostRecentChitId = chitsSortedByRecent[0].chit_id;
+    await setChitPhoto(body, mostRecentChitId);
+  };
+
+  //show alert asking if user wants to save draft or go to drafts screen
   manageDrafts = () => {
     if (this.state.userData == null) {
       this.alertLoginNeeded();
@@ -102,40 +122,13 @@ class CreateChit extends Component {
     }
   };
 
+  //save current chit to async storage.
   saveDraft = async () => {
     var body = this.createChitPOSTBody();
     await saveChitDraft(this.state.text, body);
   };
 
-  // retrieveDraft = async key => {
-  //   if (this.state.userData == null) {
-  //     this.alertLoginNeeded;
-  //   } else {
-  //     var body = await retrieveChitDraft(key);
-  //   }
-  // };
-
-  createChitPOSTBody() {
-    var body = JSON.stringify({
-      chit_id: 0,
-      timestamp: Date.now(),
-      chit_content: this.state.text,
-      location: {
-        longitude:
-          this.state.location != null ? this.state.location.longitude : 0,
-        latitude:
-          this.state.location != null ? this.state.location.latitude : 0,
-      },
-      user: {
-        user_id: GLOBAL.currentUser,
-        given_name: this.state.userData.given_name,
-        family_name: this.state.userData.family_name,
-        email: this.state.userData.email,
-      },
-    });
-    return body;
-  }
-
+  //launch imagePicker, set filePAth in state to chosen image
   chooseFile = () => {
     var options = {
       title: 'Select Image',
@@ -158,6 +151,7 @@ class CreateChit extends Component {
     });
   };
 
+  //show alert that use must log in to create a chit
   alertLoginNeeded() {
     Alert.alert(
       'Sorry!',
@@ -180,6 +174,7 @@ class CreateChit extends Component {
     );
   }
 
+  //use location API to find location
   findCoordinates = async () => {
     if (!this.state.locationPermission) {
       this.state.locationPermission = await requestLocationPermission();

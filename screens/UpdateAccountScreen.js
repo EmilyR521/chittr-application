@@ -11,7 +11,7 @@ import {
 import {updateUser} from '../services/UserManagement';
 import {styles} from '../styles/RegistrationScreen.style';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import themeColours from '../styles/themeColours';
+import themeColours from '../styles/ThemeColours';
 import {globalStyles} from '../styles/Global.style';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {headerStyles} from '../styles/Header.style';
@@ -20,6 +20,7 @@ import ImagePicker from 'react-native-image-picker';
 
 // Screen to allow a logged in user to update their account details or profile image
 class UpdateAccountScreen extends Component {
+  //set navigation header styles and nav buttons
   static navigationOptions = () => {
     return {
       headerTitle: '',

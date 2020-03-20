@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-import themeColours from './themeColours';
+import themeColours from './ThemeColours';
 export const styles = StyleSheet.create({
   list: {width: '100%', flex: 1, marginTop: 40},
   container: {

@@ -2,16 +2,17 @@ import React, {Component} from 'react';
 import {NavigationEvents} from 'react-navigation';
 import {View, FlatList, ActivityIndicator} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import Chit from '../components/chit';
-import CreateChit from '../components/createChit';
+import Chit from '../components/Chit';
+import CreateChit from '../components/CreateChit';
 import {getChits} from '../services/PostingChits';
 import {styles} from '../styles/FeedScreen.style';
 import {headerStyles} from '../styles/Header.style';
-import headerRightView from '../components/headerRight';
+import headerRightView from '../components/HeaderRight';
 import {globalStyles} from '../styles/Global.style';
 
 // Screen to display recent chits from followed users
 class FeedScreen extends Component {
+  //set navigation header styles and nav buttons
   static navigationOptions = ({navigation}) => {
     const loggedIn = !(
       GLOBAL.currentUser == undefined || GLOBAL.currentUser == ''

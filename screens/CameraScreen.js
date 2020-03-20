@@ -7,7 +7,7 @@ import {
   StatusBar,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
-import themeColours from '../styles/themeColours';
+import themeColours from '../styles/ThemeColours';
 import {globalStyles} from '../styles/Global.style';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {headerStyles} from '../styles/Header.style';
